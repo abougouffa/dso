@@ -12,20 +12,41 @@ set(EXECUTABLE_OUTPUT_PATH bin)
 set(LIBRARY_OUTPUT_PATH lib)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
+if (BUILD_DOC)
+  find_package(Doxygen)
+  if (DOXYGEN_FOUND)
+  	# set input and output files
+  	set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/Doxyfile.in)
+  	set(DOXYGEN_OUT ${PROJECT_SOURCE_DIR}/Doxyfile)  
+  	# request to configure the file
+  	configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+  	message("Doxygen build started")  
+  	# note the option ALL which allows to build the docs together with the application
+  	add_custom_target( doc ALL
+  		COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+  		WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  		COMMENT "Generating API documentation with Doxygen"
+  		VERBATIM )
+  else (DOXYGEN_FOUND)
+    message("Doxygen need to be installed to generate the doxygen documentation")
+  endif (DOXYGEN_FOUND)
+endif ()
+
+
 # required libraries
 find_package(SuiteParse REQUIRED)
-find_package(Eigen3 REQUIRED)
 find_package(Boost COMPONENTS system thread) 
 
 # optional libraries
 find_package(LibZip QUIET)
 find_package(Pangolin 0.2 QUIET)
 find_package(OpenCV QUIET)
+find_package(Glog REQUIRED)
 
 # flags
 add_definitions("-DENABLE_SSE")
 set(CMAKE_CXX_FLAGS
-   "${SSE_FLAGS} -O3 -g -std=c++0x -march=native"
+    "${SSE_FLAGS} -O3 -std=c++11 -Wall -Werror"
 #   "${SSE_FLAGS} -O3 -g -std=c++0x -fno-omit-frame-pointer"
 )
 
@@ -35,33 +56,50 @@ endif (MSVC)
 
 # Sources files
 set(dso_SOURCE_FILES
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/FullSystem.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/FullSystemOptimize.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/FullSystemOptPoint.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/FullSystemDebugStuff.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/FullSystemMarginalize.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/Residuals.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/CoarseTracker.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/CoarseInitializer.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/ImmaturePoint.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/HessianBlocks.cpp
-  ${PROJECT_SOURCE_DIR}/src/FullSystem/PixelSelector2.cpp
-  ${PROJECT_SOURCE_DIR}/src/OptimizationBackend/EnergyFunctional.cpp
-  ${PROJECT_SOURCE_DIR}/src/OptimizationBackend/AccumulatedTopHessian.cpp
-  ${PROJECT_SOURCE_DIR}/src/OptimizationBackend/AccumulatedSCHessian.cpp
-  ${PROJECT_SOURCE_DIR}/src/OptimizationBackend/EnergyFunctionalStructs.cpp
-  ${PROJECT_SOURCE_DIR}/src/util/settings.cpp
-  ${PROJECT_SOURCE_DIR}/src/util/Undistort.cpp
-  ${PROJECT_SOURCE_DIR}/src/util/globalCalib.cpp
+  ${PROJECT_SOURCE_DIR}/src/full_system/full_system.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/full_system_optimize.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/full_system_opt_point.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/full_system_debug_stuff.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/full_system_marginalize.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/residuals.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/tracker/coarse_tracker.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/tracker/coarse_distance_map.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/initializer/coarse_initializer.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/immature_point.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/pixel_selector2.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/hessian_blocks/frame_frame_pre_calc.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/hessian_blocks/frame_hessian.cc
+  ${PROJECT_SOURCE_DIR}/src/full_system/hessian_blocks/point_hessian.cc
+  ${PROJECT_SOURCE_DIR}/src/optimization_backend/energy_functional/ef_frame.cc 
+  ${PROJECT_SOURCE_DIR}/src/optimization_backend/energy_functional/ef_point.cc 
+  ${PROJECT_SOURCE_DIR}/src/optimization_backend/energy_functional/ef_residual.cc 
+  ${PROJECT_SOURCE_DIR}/src/optimization_backend/energy_functional/energy_functional.cc
+  ${PROJECT_SOURCE_DIR}/src/optimization_backend/accumulated_top_hessian_sse.cc
+  ${PROJECT_SOURCE_DIR}/src/optimization_backend/accumulated_sc_hessian_sse.cc
+  ${PROJECT_SOURCE_DIR}/src/optimization_backend/accumulators/accumulator_9.cc
+  ${PROJECT_SOURCE_DIR}/src/optimization_backend/accumulators/accumulator_14.cc
+  ${PROJECT_SOURCE_DIR}/src/optimization_backend/accumulators/accumulator_approx.cc
+  ${PROJECT_SOURCE_DIR}/src/undistorter/undistorter.cc
+  ${PROJECT_SOURCE_DIR}/src/undistorter/photometric_undistorter.cc
+  ${PROJECT_SOURCE_DIR}/src/undistorter/undistorter_fov.cc
+  ${PROJECT_SOURCE_DIR}/src/undistorter/undistorter_kb.cc 
+  ${PROJECT_SOURCE_DIR}/src/undistorter/undistorter_pinhole.cc
+  ${PROJECT_SOURCE_DIR}/src/undistorter/undistorter_rad_tan.cc
+  ${PROJECT_SOURCE_DIR}/src/undistorter/undistorter_equidistant.cc
+  ${PROJECT_SOURCE_DIR}/src/util/settings.cc
+  ${PROJECT_SOURCE_DIR}/src/util/global_calib.cc
+  ${PROJECT_SOURCE_DIR}/src/util/dataset_reader.cc
+  ${PROJECT_SOURCE_DIR}/src/util/input_parser.cc
+  ${PROJECT_SOURCE_DIR}/src/util/converter.cc
 )
 
 
 
 include_directories(
-  ${PROJECT_SOURCE_DIR}/src
+  ${PROJECT_SOURCE_DIR}/include
   ${PROJECT_SOURCE_DIR}/thirdparty/Sophus
   ${PROJECT_SOURCE_DIR}/thirdparty/sse2neon
-  ${EIGEN3_INCLUDE_DIR}
+  "/usr/include/eigen3/"
 ) 
 
 
@@ -70,8 +108,8 @@ if (Pangolin_FOUND)
 	message("--- found PANGOLIN, compiling dso_pangolin library.")
 	include_directories( ${Pangolin_INCLUDE_DIRS} ) 
 	set(dso_pangolin_SOURCE_FILES 
-	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/Pangolin/KeyFrameDisplay.cpp
-	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/Pangolin/PangolinDSOViewer.cpp)
+	  ${PROJECT_SOURCE_DIR}/src/io_wrapper/pangolin/keyframe_display.cc
+	  ${PROJECT_SOURCE_DIR}/src/io_wrapper/pangolin/pangolin_dso_viewer.cc)
 	set(HAS_PANGOLIN 1)
 else ()
 	message("--- could not find PANGOLIN, not compiling dso_pangolin library.")
@@ -85,15 +123,15 @@ if (OpenCV_FOUND)
 	message("--- found OpenCV, compiling dso_opencv library.")
 	include_directories( ${OpenCV_INCLUDE_DIRS} )
 	set(dso_opencv_SOURCE_FILES 
-	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/OpenCV/ImageDisplay_OpenCV.cpp
-	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/OpenCV/ImageRW_OpenCV.cpp)
+	  ${PROJECT_SOURCE_DIR}/src/io_wrapper/opencv/image_display.cc
+	  ${PROJECT_SOURCE_DIR}/src/io_wrapper/opencv/image_rw.cc)
 	set(HAS_OPENCV 1)
 else ()
 	message("--- could not find OpenCV, not compiling dso_opencv library.")
 	message("    this means there will be no image display, and image read / load functionality.")
 	set(dso_opencv_SOURCE_FILES 
-	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/ImageDisplay_dummy.cpp
-	  ${PROJECT_SOURCE_DIR}/src/IOWrapper/ImageRW_dummy.cpp)
+	  ${PROJECT_SOURCE_DIR}/src/io_wrapper/image_display_dummy.cc
+	  ${PROJECT_SOURCE_DIR}/src/io_wrapper/image_rw_dummy.cc)
 	set(HAS_OPENCV 0)
 endif ()
 
@@ -124,8 +162,27 @@ endif()
 # build main executable (only if we have both OpenCV and Pangolin)
 if (OpenCV_FOUND AND Pangolin_FOUND)
 	message("--- compiling dso_dataset.")
-	add_executable(dso_dataset ${PROJECT_SOURCE_DIR}/src/main_dso_pangolin.cpp )
-    target_link_libraries(dso_dataset dso boost_system cxsparse ${BOOST_THREAD_LIBRARY} ${LIBZIP_LIBRARY} ${Pangolin_LIBRARIES} ${OpenCV_LIBS})
+	add_executable(dso_dataset ${PROJECT_SOURCE_DIR}/app/main_dso_pangolin.cc )
+	target_link_libraries(dso_dataset						  
+						  dso 
+						  boost_system
+						  cxsparse 
+						  glog
+						  ${BOOST_THREAD_LIBRARY}
+						  ${LIBZIP_LIBRARY} 
+						  ${Pangolin_LIBRARIES} 
+						  ${OpenCV_LIBS})
+
+	add_executable(dso_new ${PROJECT_SOURCE_DIR}/app/main.cc )
+	target_link_libraries(dso_new
+						  dso 
+						  boost_system
+						  cxsparse 
+						  glog
+						  ${BOOST_THREAD_LIBRARY}
+						  ${LIBZIP_LIBRARY} 
+						  ${Pangolin_LIBRARIES} 
+						  ${OpenCV_LIBS})
 else()
 	message("--- not building dso_dataset, since either don't have openCV or Pangolin.")
 endif()
