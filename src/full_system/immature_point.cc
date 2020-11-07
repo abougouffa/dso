@@ -169,7 +169,9 @@ ImmaturePointStatus ImmaturePoint::traceOn(FrameHessian* frame,
   }
 
   // set OOB if scale change too big.
-  if (!(idepth_min < 0 || (ptpMin[2] > 0.75 && ptpMin[2] < 1.5))) {
+  // (Tong) This may be a bug
+  // if (!(idepth_min < 0 || (ptpMin[2] > 0.75 && ptpMin[2] < 1.5))) { 
+  if (idepth_min < 0 || !(ptpMin[2] > 0.75 && ptpMin[2] < 1.5))) {
     if (debugPrint) {
       LOG(INFO) << "OOB SCALE " << uMax << " " << vMax << " " << ptpMin[2];
     }
@@ -212,8 +214,8 @@ ImmaturePointStatus ImmaturePoint::traceOn(FrameHessian* frame,
   }
 
   // ============== do the discrete search ===================
-  dx /= dist;  // 每次移动x方向的便宜量
-  dy /= dist;  // 每次移动y方向的便宜量
+  dx /= dist;  // 每次移动x方向的偏移量
+  dy /= dist;  // 每次移动y方向的偏移量
 
   if (debugPrint) {
     LOG(INFO) << "trace pt (" << u << " " << v << ") from frame "
@@ -270,8 +272,9 @@ ImmaturePointStatus ImmaturePoint::traceOn(FrameHessian* frame,
       }
       float residual = hitColor - (float)(hostToFrame_affine[0] * color[idx] +
                                           hostToFrame_affine[1]);
-      float hw = fabs(residual) < setting_huberTH ? 1 : setting_huberTH /
-                                                            fabs(residual);
+      float hw = fabs(residual) < setting_huberTH
+                     ? 1
+                     : setting_huberTH / fabs(residual);
       energy += hw * residual * residual * (2 - hw);
     }
 
@@ -325,8 +328,9 @@ ImmaturePointStatus ImmaturePoint::traceOn(FrameHessian* frame,
       float residual = hitColor[0] - (hostToFrame_affine[0] * color[idx] +
                                       hostToFrame_affine[1]);
       float dResdDist = dx * hitColor[1] + dy * hitColor[2];
-      float hw = fabs(residual) < setting_huberTH ? 1 : setting_huberTH /
-                                                            fabs(residual);
+      float hw = fabs(residual) < setting_huberTH
+                     ? 1
+                     : setting_huberTH / fabs(residual);
 
       H += hw * dResdDist * dResdDist;
       b += hw * residual * dResdDist;
@@ -490,8 +494,9 @@ float ImmaturePoint::calcResidual(CalibHessian* HCalib,
 
     float residual = hitColor[0] - (affLL[0] * color[idx] + affLL[1]);
 
-    float hw = fabsf(residual) < setting_huberTH ? 1 : setting_huberTH /
-                                                           fabsf(residual);
+    float hw = fabsf(residual) < setting_huberTH
+                   ? 1
+                   : setting_huberTH / fabsf(residual);
     energyLeft +=
         weights[idx] * weights[idx] * hw * residual * residual * (2 - hw);
   }
@@ -546,8 +551,9 @@ double ImmaturePoint::linearizeResidual(CalibHessian* HCalib,
     }
     float residual = hitColor[0] - (affLL[0] * color[idx] + affLL[1]);
 
-    float hw = fabsf(residual) < setting_huberTH ? 1 : setting_huberTH /
-                                                           fabsf(residual);
+    float hw = fabsf(residual) < setting_huberTH
+                   ? 1
+                   : setting_huberTH / fabsf(residual);
     energyLeft +=
         weights[idx] * weights[idx] * hw * residual * residual * (2 - hw);
 
@@ -573,4 +579,4 @@ double ImmaturePoint::linearizeResidual(CalibHessian* HCalib,
   tmpRes->state_NewEnergy = energyLeft;
   return energyLeft;
 }
-}
+}  // namespace dso
