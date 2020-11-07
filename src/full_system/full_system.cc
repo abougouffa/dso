@@ -1,13 +1,13 @@
 #include "full_system/full_system.h"
 
-#include <stdio.h>
-#include <algorithm>
-#include <cmath>
-
 #include <glog/logging.h>
+#include <stdio.h>
+
 #include <Eigen/Eigenvalues>
 #include <Eigen/LU>
 #include <Eigen/SVD>
+#include <algorithm>
+#include <cmath>
 
 #include "full_system/immature_point.h"
 #include "full_system/initializer/coarse_initializer.h"
@@ -139,7 +139,6 @@ FullSystem::~FullSystem() {
     delete numsLog;
     coarseTrackingLog->close();
     delete coarseTrackingLog;
-    // errorsLog->close(); delete errorsLog;
     eigenAllLog->close();
     delete eigenAllLog;
     eigenPLog->close();
@@ -267,11 +266,10 @@ Vec4 FullSystem::trackNewCoarse(FrameHessian* fh) {
     lastF_2_fh_tries.emplace_back(lastF_2_slast);  // assume zero motion.
     lastF_2_fh_tries.emplace_back(SE3());  // assume zero motion FROM KF.
 
-    // just try a TON of different initializations (all rotations). In the end,
+    // Just try a TON of different initializations (all rotations). In the end,
     // if they don't work they will only be tried on the coarsest level, which
-    // is super fast anyway.
-    // also, if tracking rails here we loose, so we really, really want to avoid
-    // that.
+    // is super fast anyway. Also, if tracking rails here we loose, so we
+    // really, really want to avoid that.
     for (float rotDelta = 0.02; rotDelta < 0.05; ++rotDelta) {
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
@@ -521,18 +519,6 @@ void FullSystem::traceNewCoarse(FrameHessian* fh) {
       ++trace_total;
     }
   }
-  //	printf("ADD: TRACE: %'d points. %'d (%.0f%%) good. %'d (%.0f%%) skip.
-  //%'d (%.0f%%) badcond. %'d (%.0f%%) oob. %'d (%.0f%%) out. %'d (%.0f%%)
-  // uninit.\n",
-  //			trace_total,
-  //			trace_good, 100*trace_good/(float)trace_total,
-  //			trace_skip, 100*trace_skip/(float)trace_total,
-  //			trace_badcondition,
-  // 100*trace_badcondition/(float)trace_total,
-  //			trace_oob, 100*trace_oob/(float)trace_total,
-  //			trace_out, 100*trace_out/(float)trace_total,
-  //			trace_uninitialized,
-  // 100*trace_uninitialized/(float)trace_total);
 }
 
 void FullSystem::activatePointsMT_Reductor(
@@ -632,11 +618,9 @@ void FullSystem::activatePointsMT() {
         // if point will be out afterwards, delete it instead.
         if (ph->host->flaggedForMarginalization ||
             ph->lastTraceStatus == IPS_OOB) {
-          //					immature_notReady_deleted++;
           delete ph;
-          host->immaturePoints[i] = 0;
+          host->immaturePoints[i] = nullptr;
         }
-        //				immature_notReady_skipped++;
         continue;
       }
 
@@ -660,12 +644,6 @@ void FullSystem::activatePointsMT() {
       }
     }
   }
-
-  //	printf("ACTIVATE: %d. (del %d, notReady %d, marg %d, good %d, marg-skip
-  //%d)\n",
-  //			(int)toOptimize.size(), immature_deleted,
-  // immature_notReady,
-  // immature_needMarg, immature_want, immature_margskip);
 
   std::vector<PointHessian*> optimized;
   optimized.resize(toOptimize.size());
@@ -720,7 +698,6 @@ void FullSystem::flagPointsForRemoval() {
   std::vector<FrameHessian*> fhsToKeepPoints;
   std::vector<FrameHessian*> fhsToMargPoints;
 
-  // if(setting_margPointVisWindow>0)
   {
     for (int i = ((int)frameHessians.size()) - 1;
          i >= 0 && i >= ((int)frameHessians.size()); --i) {
@@ -736,8 +713,6 @@ void FullSystem::flagPointsForRemoval() {
     }
   }
 
-  // ef->setAdjointsF();
-  // ef->setDeltaF(&Hcalib);
   int flag_oob = 0, flag_in = 0, flag_inin = 0, flag_nores = 0;
 
   for (FrameHessian* host : frameHessians) {
@@ -780,9 +755,6 @@ void FullSystem::flagPointsForRemoval() {
         } else {
           host->pointHessiansOut.emplace_back(ph);
           ph->efPoint->stateFlag = EFPointStatus::PS_DROP;
-
-          // printf("drop point in frame %d (%d goodRes, %d activeRes)\n",
-          // ph->host->idx, ph->numGoodResiduals, (int)ph->residuals.size());
         }
 
         host->pointHessians[i] = 0;
@@ -1000,7 +972,6 @@ void FullSystem::makeNonKeyFrame(FrameHessian* const fh) {
     CHECK_NOTNULL(fh->shell->trackingRef);
     fh->shell->camToWorld =
         fh->shell->trackingRef->camToWorld * fh->shell->camToTrackingRef;
-    // fh->shell->camToWorld =  T_c0w * fh->ex_Twc;
     fh->setEvalPT_scaled(fh->shell->camToWorld.inverse(), fh->shell->aff_g2l);
   }
 
@@ -1017,7 +988,6 @@ void FullSystem::makeKeyFrame(FrameHessian* const fh) {
     // Tw_cur = Tw_ref * Tref_cur
     fh->shell->camToWorld =
         fh->shell->trackingRef->camToWorld * fh->shell->camToTrackingRef;
-    // fh->shell->camToWorld =  T_c0w * fh->ex_Twc;
     fh->setEvalPT_scaled(fh->shell->camToWorld.inverse(), fh->shell->aff_g2l);
   }
 
@@ -1121,7 +1091,6 @@ void FullSystem::makeKeyFrame(FrameHessian* const fh) {
   }
 
   printLogLine();
-  // printEigenValLine();
 }
 
 void FullSystem::initializeFromInitializer(FrameHessian* newFrame) {
@@ -1152,7 +1121,7 @@ void FullSystem::initializeFromInitializer(FrameHessian* newFrame) {
     sumID += coarseInitializer->points[0][i].iR;
     ++numID;
   }
-  // rescaleFactor = 1 / mean of inverse depths
+  // inverse of mean inverse depth
   float rescaleFactor = 1 / (sumID / numID);
 
   // randomly sub-select the points I need.
@@ -1231,7 +1200,6 @@ void FullSystem::makeNewTraces(FrameHessian* newFrame, float* gtDepth) {
                                                setting_desiredImmatureDensity);
 
   newFrame->pointHessians.reserve(numPointsTotal * 1.2f);
-  // fh->pointHessiansInactive.reserve(numPointsTotal*1.2f);
   newFrame->pointHessiansMarginalized.reserve(numPointsTotal * 1.2f);
   newFrame->pointHessiansOut.reserve(numPointsTotal * 1.2f);
 
@@ -1251,7 +1219,6 @@ void FullSystem::makeNewTraces(FrameHessian* newFrame, float* gtDepth) {
       }
     }
   }
-  // printf("MADE %d IMMATURE POINTS!\n", (int)newFrame->immaturePoints.size());
 }
 
 void FullSystem::setPrecalcValues() {
@@ -1445,4 +1412,4 @@ FrameHessian* FullSystem::PreprocessNewFrame(ImageAndExposure* const image,
   return fh;
 }
 
-}  // dso
+}  // namespace dso

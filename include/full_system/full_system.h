@@ -1,12 +1,12 @@
 #pragma once
 
+#include <glog/logging.h>
 #include <math.h>
+
 #include <deque>
 #include <fstream>
 #include <iostream>
 #include <vector>
-
-#include <glog/logging.h>
 
 #include "full_system/hessian_blocks/hessian_blocks.h"
 #include "full_system/pixel_selector2.h"
@@ -15,7 +15,6 @@
 #include "util/frame_shell.h"
 #include "util/global_calib.h"
 #include "util/index_thread_reduce.h"
-#include "util/num_type.h"
 #include "util/num_type.h"
 
 #define MAX_ACTIVE_FRAMES 100
@@ -110,17 +109,15 @@ class FullSystem {
    *
    *  @param[in] image - image container
    *  @param[in] id    - image id
-  */
+   */
   void addActiveFrame(ImageAndExposure* image, int id);
-
-  //
 
   /** \brief Marginalize a frame.
    *
    *  Marginalize a frame. Drop / marginalize points & residuals.
    *
    *  @param[in] frame - frame to marginalize
-  */
+   */
   void marginalizeFrame(FrameHessian* frame);
   void blockUntilMappingIsFinished();
 
@@ -131,19 +128,10 @@ class FullSystem {
   void debugPlot(std::string name);
 
   void printFrameLifetimes();
-  // contains pointers to active frames
 
   void setGammaFunction(float* const BInv);
   void setOriginalCalib(const VecXf& originalCalib, const int originalW,
                         const int originalH);
-
- public:
-  std::vector<IOWrap::Output3DWrapper*> outputWrapper;
-
-  bool isLost;
-  bool initFailed;
-  bool initialized;
-  bool linearizeOperation;
 
  private:
   /** \brief Prerocess a new coming frame */
@@ -189,7 +177,7 @@ class FullSystem {
    *  Back up the current state (Tcw, a, b, inverse depth of all points etc.)
    *
    *  @param[in] backupLastStep - not used
-  */
+   */
   void backupState(const bool backupLastStep);
 
   /** \brief Set linearization point. */
@@ -199,21 +187,21 @@ class FullSystem {
    *
    *  Since the global variable setting_forceAceptStep is true by default, this
    *  function always returns 0 for now.
-  */
+   */
   double calcLEnergy();
 
   /** \brief A function always returns 0 for now
    *
    *  Since the global variable setting_forceAceptStep is true by default, this
    *  function always returns 0 for now.
-  */
+   */
   double calcMEnergy();
 
   /** \brief
    *
    *  @param[in] fixLinearization flag to fix linearization
    *  @return [0]: sum of all active residuals (Note: [1], [2] not used)
-  */
+   */
   Vec3 linearizeAll(const bool fixLinearization);
 
   /** TODO
@@ -224,7 +212,7 @@ class FullSystem {
    *  @param[in]  tid               index of toRemove to use
    *  @param[out] toRemove          container to store residual to remove
    *  @param[out] stats
-  */
+   */
   void linearizeAll_Reductor(const bool fixLinearization,
                              std::vector<PointFrameResidual*>* const toRemove,
                              const int min, const int max, Vec10* const stats,
@@ -241,7 +229,7 @@ class FullSystem {
    *  @param[in] copyJacobians flag to decide whether we should update jacobians
    *  @param stats             not used (placeholder)
    *  @param tid               not used (placeholder)
-  */
+   */
   void applyRes_Reductor(bool copyJacobians, const int min, const int max,
                          Vec10* stats, int tid);
 
@@ -267,6 +255,14 @@ class FullSystem {
   void makeNonKeyFrame(FrameHessian* const fh);
   void deliverTrackedFrame(FrameHessian* const fh, const bool needKF);
   void mappingLoop();
+
+ public:
+  std::vector<IOWrap::Output3DWrapper*> outputWrapper;
+
+  bool isLost;
+  bool initFailed;
+  bool initialized;
+  bool linearizeOperation;
 
  private:
   CalibHessian Hcalib;
@@ -316,8 +312,8 @@ class FullSystem {
 
   /** \brief Active residuals for optimization
    *
-   *  Residuals of those all still not linearized points
-  */
+   *  Residuals of those still not linearized points
+   */
   std::vector<PointFrameResidual*> activeResiduals;
 
   float currentMinActDist;
@@ -358,4 +354,4 @@ class FullSystem {
   int lastRefStopID;
   SE3 T_c0w;
 };
-}  // dso
+}  // namespace dso
