@@ -10,12 +10,12 @@
 #include "util/settings.h"
 
 namespace dso {
-struct CalibHessian;
-struct FrameHessian;
+class CalibHessian;
+class FrameHessian;
 
 class CoarseTracker {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   CoarseTracker(int w, int h);
   ~CoarseTracker();

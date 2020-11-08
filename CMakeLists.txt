@@ -46,8 +46,7 @@ find_package(Glog REQUIRED)
 # flags
 add_definitions("-DENABLE_SSE")
 set(CMAKE_CXX_FLAGS
-    "${SSE_FLAGS} -O3 -std=c++11 -Wall -Werror"
-#   "${SSE_FLAGS} -O3 -g -std=c++0x -fno-omit-frame-pointer"
+    "${SSE_FLAGS} -O3 -std=c++14 -Wall -Werror"
 )
 
 if (MSVC)
@@ -97,7 +96,7 @@ set(dso_SOURCE_FILES
 
 include_directories(
   ${PROJECT_SOURCE_DIR}/include
-  ${PROJECT_SOURCE_DIR}/thirdparty/Sophus
+  ${PROJECT_SOURCE_DIR}/thirdparty/Sophus-1.0.0
   ${PROJECT_SOURCE_DIR}/thirdparty/sse2neon
   "/usr/include/eigen3/"
 ) 

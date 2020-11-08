@@ -10,7 +10,7 @@ class FrameHessian;
 
 class PixelSelector {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   // 寻找高梯度点，输出是map_out
   // map_out[i] == 0: invalid pixel

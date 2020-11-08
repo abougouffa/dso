@@ -9,7 +9,7 @@ namespace dso {
 
 class ImageAndExposure {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   ImageAndExposure(int w_, int h_, double timestamp_ = 0)
       : w(w_), h(h_), timestamp(timestamp_) {

@@ -12,7 +12,7 @@ namespace dso {
 
 class Accumulator14 {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   inline void initialize() {
     H.setZero();

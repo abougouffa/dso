@@ -662,8 +662,8 @@ bool CoarseTracker::trackNewestCoarse(FrameHessian* newFrameHessian,
   lastToNew_out = refToNew_current;
   aff_g2l_out = aff_g2l_current;
 
-  if ((setting_affineOptModeA != 0 && (fabsf(aff_g2l_out.a) > 1.2)) ||
-      (setting_affineOptModeB != 0 && (fabsf(aff_g2l_out.b) > 200))) {
+  if ((setting_affineOptModeA != 0 && fabs(aff_g2l_out.a) > 1.2) ||
+      (setting_affineOptModeB != 0 && fabs(aff_g2l_out.b) > 200.)) {
     return false;
   }
 
@@ -672,8 +672,8 @@ bool CoarseTracker::trackNewestCoarse(FrameHessian* newFrameHessian,
                                   lastRef_aff_g2l, aff_g2l_out)
           .cast<float>();
 
-  if ((setting_affineOptModeA == 0 && (fabsf(logf((float)relAff[0])) > 1.5)) ||
-      (setting_affineOptModeB == 0 && (fabsf((float)relAff[1]) > 200))) {
+  if ((setting_affineOptModeA == 0 && fabs(log(relAff[0])) > 1.5) ||
+      (setting_affineOptModeB == 0 && fabs(relAff[1]) > 200)) {
     return false;
   }
 
@@ -806,4 +806,4 @@ void CoarseTracker::debugPlotIDepthMapFloat(
     ow->pushDepthImageFloat(&mim, lastRef);
   }
 }
-}
+}  // namespace dso

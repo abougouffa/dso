@@ -5,13 +5,13 @@
 
 namespace dso {
 
-struct CalibHessian;
-struct FrameHessian;
-struct PointFrameResidual;
+class CalibHessian;
+class FrameHessian;
+class PointFrameResidual;
 
 class CoarseDistanceMap {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   CoarseDistanceMap(int w, int h);
   ~CoarseDistanceMap();
@@ -25,6 +25,10 @@ class CoarseDistanceMap {
 
   void addIntoDistFinal(int u, int v);
 
+ private:
+  void growDistBFS(int bfsNum);
+
+ public:
   float* fwdWarpedIDDistFinal;
 
   Mat33f K[PYR_LEVELS];
@@ -41,13 +45,10 @@ class CoarseDistanceMap {
   int h[PYR_LEVELS];
 
  private:
-  void growDistBFS(int bfsNum);
-
- private:
   PointFrameResidual** coarseProjectionGrid;
   int* coarseProjectionGridNum;
   Eigen::Vector2i* bfsList1;
   Eigen::Vector2i* bfsList2;
 };
 
-}  // dso
+}  // namespace dso

@@ -7,5 +7,7 @@ build/
 *.a
 *.so.*
 thirdparty/libzip-1.1.1
+thirdparty/eigen-3.3.3/
+thirdparty/Sophus-1.0.0/
 doc/
 Doxyfile

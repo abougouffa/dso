@@ -11,7 +11,7 @@ namespace dso {
 // 模板匹配？
 class Accumulator11 {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   inline void initialize() {
     A = 0;

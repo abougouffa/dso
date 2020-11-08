@@ -8,7 +8,7 @@ namespace dso {
 
 class UndistortEquidistant : public Undistorter {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   UndistortEquidistant(const char* file_config, const bool noprefix);
   ~UndistortEquidistant();
   void DistortCoordinates(float* const in_x, float* const in_y,

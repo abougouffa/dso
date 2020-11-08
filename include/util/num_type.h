@@ -1,13 +1,11 @@
 #pragma once
 
-#include <Eigen/Core>
+#include <Eigen/Dense>
 
 #include "sophus/se3.hpp"
 #include "sophus/sim3.hpp"
 
 namespace dso {
-
-// CAMERA MODEL TO USE
 
 #define SSEE(val, idx) (*(((float*)&val) + idx))
 
@@ -128,7 +126,7 @@ struct AffLight {
    *
    * I_frame = exp(a)*I_global + b
    * I_global = exp(-a)*(I_frame - b)
-  */
+   */
   double a, b;
 
   /** \brief Compute the relative photometric transfer paramters
@@ -138,7 +136,7 @@ struct AffLight {
    * @param[in] g2F       - affine parameters [a_f b_f] of frame "From"
    * @param[in] g2T       - affine parameters [a_t b_t] of frame "To"
    * @return return [exp(a_{th}) b_{th}]
-  */
+   */
   static Vec2 fromToVecExposure(float exposureF, float exposureT, AffLight g2F,
                                 AffLight g2T) {
     if (exposureF == 0 || exposureT == 0) {
@@ -155,4 +153,4 @@ struct AffLight {
   Vec2 vec() { return Vec2(a, b); }
 };
 
-}  // dso
+}  // namespace dso

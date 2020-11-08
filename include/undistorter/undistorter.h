@@ -14,7 +14,7 @@ namespace dso {
 
 class Undistorter {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   virtual ~Undistorter();
 
   virtual void DistortCoordinates(float* const in_x, float* const in_y,

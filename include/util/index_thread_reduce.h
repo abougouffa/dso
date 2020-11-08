@@ -14,7 +14,7 @@ namespace dso {
 template <typename Running>
 class IndexThreadReduce {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   inline IndexThreadReduce() {
     nextIndex = 0;

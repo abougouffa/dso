@@ -7,7 +7,7 @@
 namespace dso {
 class UndistortRadTan : public Undistorter {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   UndistortRadTan(const char* file_config, bool noprefix);
   ~UndistortRadTan();
   void DistortCoordinates(float* const in_x, float* const in_y,

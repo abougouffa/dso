@@ -12,7 +12,7 @@ enum EFPointStatus { PS_GOOD = 0, PS_MARGINALIZE, PS_DROP };
 
 class EFPoint {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   EFPoint(PointHessian* d, EFFrame* host_) : data(d), host(host_) {
     takeData();
     stateFlag = EFPointStatus::PS_GOOD;

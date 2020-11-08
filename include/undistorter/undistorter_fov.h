@@ -8,7 +8,7 @@ namespace dso {
 
 class UndistortFOV : public Undistorter {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   UndistortFOV(const char* file_config, const bool noprefix);
   ~UndistortFOV();

@@ -10,13 +10,13 @@
 #include "util/settings.h"
 
 namespace dso {
-struct CalibHessian;
-struct FrameHessian;
+class CalibHessian;
+class FrameHessian;
 struct Pnt;
 
 class CoarseInitializer {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   CoarseInitializer(int w, int h);
   ~CoarseInitializer();
 

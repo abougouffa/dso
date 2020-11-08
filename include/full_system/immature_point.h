@@ -26,7 +26,7 @@ enum ImmaturePointStatus {
 
 class ImmaturePoint {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   ImmaturePoint(int u_, int v_, FrameHessian* host_, float type,
                 CalibHessian* HCalib);

@@ -170,8 +170,8 @@ ImmaturePointStatus ImmaturePoint::traceOn(FrameHessian* frame,
 
   // set OOB if scale change too big.
   // (Tong) This may be a bug
-  // if (!(idepth_min < 0 || (ptpMin[2] > 0.75 && ptpMin[2] < 1.5))) { 
-  if (idepth_min < 0 || !(ptpMin[2] > 0.75 && ptpMin[2] < 1.5))) {
+  // if (!(idepth_min < 0 || (ptpMin[2] > 0.75 && ptpMin[2] < 1.5))) {
+  if (idepth_min < 0 || !(ptpMin[2] > 0.75 && ptpMin[2] < 1.5)) {
     if (debugPrint) {
       LOG(INFO) << "OOB SCALE " << uMax << " " << vMax << " " << ptpMin[2];
     }

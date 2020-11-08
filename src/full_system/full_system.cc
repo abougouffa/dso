@@ -273,89 +273,89 @@ Vec4 FullSystem::trackNewCoarse(FrameHessian* fh) {
     for (float rotDelta = 0.02; rotDelta < 0.05; ++rotDelta) {
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, rotDelta, 0, 0), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, rotDelta, 0, 0), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, 0, rotDelta, 0), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, 0, rotDelta, 0), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, 0, 0, rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, 0, 0, rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, -rotDelta, 0, 0), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, -rotDelta, 0, 0), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, 0, -rotDelta, 0), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, 0, -rotDelta, 0), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, 0, 0, -rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, 0, 0, -rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, rotDelta, rotDelta, 0), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, rotDelta, rotDelta, 0), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, 0, rotDelta, rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, 0, rotDelta, rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, rotDelta, 0, rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, rotDelta, 0, rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, -rotDelta, rotDelta, 0), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, -rotDelta, rotDelta, 0), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, 0, -rotDelta, rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, 0, -rotDelta, rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, -rotDelta, 0, rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, -rotDelta, 0, rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, rotDelta, -rotDelta, 0), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, rotDelta, -rotDelta, 0), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, 0, rotDelta, -rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, 0, rotDelta, -rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, rotDelta, 0, -rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, rotDelta, 0, -rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, -rotDelta, -rotDelta, 0), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, -rotDelta, -rotDelta, 0), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, 0, -rotDelta, -rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, 0, -rotDelta, -rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, -rotDelta, 0, -rotDelta), Vec3(0, 0, 0)));
+          SE3(Eigen::Quaterniond(1, -rotDelta, 0, -rotDelta), Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, -rotDelta, -rotDelta, -rotDelta),
+          SE3(Eigen::Quaterniond(1, -rotDelta, -rotDelta, -rotDelta),
               Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, -rotDelta, -rotDelta, rotDelta),
+          SE3(Eigen::Quaterniond(1, -rotDelta, -rotDelta, rotDelta),
               Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, -rotDelta, rotDelta, -rotDelta),
+          SE3(Eigen::Quaterniond(1, -rotDelta, rotDelta, -rotDelta),
               Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, -rotDelta, rotDelta, rotDelta),
+          SE3(Eigen::Quaterniond(1, -rotDelta, rotDelta, rotDelta),
               Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, rotDelta, -rotDelta, -rotDelta),
+          SE3(Eigen::Quaterniond(1, rotDelta, -rotDelta, -rotDelta),
               Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, rotDelta, -rotDelta, rotDelta),
+          SE3(Eigen::Quaterniond(1, rotDelta, -rotDelta, rotDelta),
               Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, rotDelta, rotDelta, -rotDelta),
+          SE3(Eigen::Quaterniond(1, rotDelta, rotDelta, -rotDelta),
               Vec3(0, 0, 0)));
       lastF_2_fh_tries.emplace_back(
           fh_2_slast.inverse() * lastF_2_slast *
-          SE3(Sophus::Quaterniond(1, rotDelta, rotDelta, rotDelta),
+          SE3(Eigen::Quaterniond(1, rotDelta, rotDelta, rotDelta),
               Vec3(0, 0, 0)));
     }
 

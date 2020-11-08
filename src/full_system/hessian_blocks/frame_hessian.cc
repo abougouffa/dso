@@ -6,6 +6,7 @@
 #include "full_system/hessian_blocks/frame_frame_pre_calc.h"
 #include "full_system/hessian_blocks/point_hessian.h"
 #include "full_system/immature_point.h"
+#include "sophus/se3.hpp"
 
 namespace dso {
 
@@ -18,8 +19,9 @@ void FrameHessian::setStateZero(const Vec10& state_zero) {
     Vec6 eps;
     eps.setZero();
     eps[i] = 1e-3;
-    SE3 EepsP = Sophus::SE3::exp(eps);
-    SE3 EepsM = Sophus::SE3::exp(-eps);
+    SE3 EepsP = SE3::exp(eps);
+    SE3 EepsM = SE3::exp(-eps);
+
     SE3 w2c_leftEps_P_x0 =
         (get_worldToCam_evalPT() * EepsP) * get_worldToCam_evalPT().inverse();
     SE3 w2c_leftEps_M_x0 =
@@ -88,7 +90,7 @@ void FrameHessian::makeImages(float* color, CalibHessian* HCalib) {
     Eigen::Vector3f* dI_l = dIp[lvl];
 
     float* dabs_l = absSquaredGrad[lvl];
-  
+
     if (lvl > 0) {
       int lvlm1 = lvl - 1;
       int wlm1 = wG[lvlm1];
@@ -158,4 +160,4 @@ Vec10 FrameHessian::getPrior() {
   return p;
 }
 
-}  // dso
+}  // namespace dso

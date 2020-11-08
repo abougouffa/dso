@@ -14,22 +14,11 @@
 
 namespace dso {
 
-struct CalibHessian {
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
-  static int instanceCounter;
+class CalibHessian {
+ public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  VecC value_zero;
-  VecC value_scaled;
-  VecCf value_scaledf;
-  VecCf value_scaledi;
-  VecC value;
-  VecC step;
-  VecC step_backup;
-  VecC value_backup;
-  VecC value_minus_value_zero;
-
-  inline ~CalibHessian() { --instanceCounter; }
-  inline CalibHessian() {
+  CalibHessian() {
     VecC initial_value = VecC::Zero();
     initial_value[0] = fxG[0];
     initial_value[1] = fyG[0];
@@ -47,17 +36,19 @@ struct CalibHessian {
     }
   };
 
-  // normal mode: use the optimized parameters everywhere!
-  inline float& fxl() { return value_scaledf[0]; }
-  inline float& fyl() { return value_scaledf[1]; }
-  inline float& cxl() { return value_scaledf[2]; }
-  inline float& cyl() { return value_scaledf[3]; }
-  inline float& fxli() { return value_scaledi[0]; }
-  inline float& fyli() { return value_scaledi[1]; }
-  inline float& cxli() { return value_scaledi[2]; }
-  inline float& cyli() { return value_scaledi[3]; }
+  ~CalibHessian() { --instanceCounter; }
 
-  inline void setValue(const VecC& value) {
+  // normal mode: use the optimized parameters everywhere!
+  float& fxl() { return value_scaledf[0]; }
+  float& fyl() { return value_scaledf[1]; }
+  float& cxl() { return value_scaledf[2]; }
+  float& cyl() { return value_scaledf[3]; }
+  float& fxli() { return value_scaledi[0]; }
+  float& fyli() { return value_scaledi[1]; }
+  float& cxli() { return value_scaledi[2]; }
+  float& cyli() { return value_scaledi[3]; }
+
+  void setValue(const VecC& value) {
     // [0-3: Kl, 4-7: Kr, 8-12: l2r]
     this->value = value;
     value_scaled[0] = SCALE_F * value[0];
@@ -73,7 +64,7 @@ struct CalibHessian {
     this->value_minus_value_zero = this->value - this->value_zero;
   };
 
-  inline void setValueScaled(const VecC& value_scaled) {
+  void setValueScaled(const VecC& value_scaled) {
     this->value_scaled = value_scaled;
     this->value_scaledf = this->value_scaled.cast<float>();
     value[0] = SCALE_F_INVERSE * value_scaled[0];
@@ -88,10 +79,7 @@ struct CalibHessian {
     this->value_scaledi[3] = -this->value_scaledf[3] / this->value_scaledf[1];
   };
 
-  float Binv[256];
-  float B[256];
-
-  EIGEN_STRONG_INLINE float getBGradOnly(float color) {
+  float getBGradOnly(float color) {
     int c = color + 0.5f;
     if (c < 5) {
       c = 5;
@@ -101,7 +89,7 @@ struct CalibHessian {
     return B[c + 1] - B[c];
   }
 
-  EIGEN_STRONG_INLINE float getBInvGradOnly(float color) {
+  float getBInvGradOnly(float color) {
     int c = color + 0.5f;
     if (c < 5) {
       c = 5;
@@ -110,6 +98,22 @@ struct CalibHessian {
     }
     return Binv[c + 1] - Binv[c];
   }
+
+ public:
+  static int instanceCounter;
+
+  VecC value_zero;
+  VecC value_scaled;
+  VecCf value_scaledf;
+  VecCf value_scaledi;
+  VecC value;
+  VecC step;
+  VecC step_backup;
+  VecC value_backup;
+  VecC value_minus_value_zero;
+
+  float Binv[256];
+  float B[256];
 };
 
-}  // dso
+}  // namespace dso

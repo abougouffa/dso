@@ -7,7 +7,7 @@
 namespace dso {
 class UndistortKB : public Undistorter {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   UndistortKB(const char* file_config, bool noprefix);
   ~UndistortKB();
   void DistortCoordinates(float* const in_x, float* const in_y,

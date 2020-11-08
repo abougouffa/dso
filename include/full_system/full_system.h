@@ -27,14 +27,14 @@ class Output3DWrapper;
 class PixelSelector;
 class PCSyntheticPoint;
 class CoarseTracker;
-struct FrameHessian;
-struct PointHessian;
+class FrameHessian;
+class PointHessian;
 class CoarseInitializer;
-struct ImmaturePointTemporaryResidual;
 class ImageAndExposure;
 class CoarseDistanceMap;
-
 class EnergyFunctional;
+
+struct ImmaturePointTemporaryResidual;
 
 template <typename T>
 inline void deleteOut(std::vector<T*>& v, const int i) {

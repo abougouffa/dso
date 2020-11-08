@@ -11,14 +11,60 @@
 
 namespace dso {
 
-struct FrameHessian;
-
+class FrameHessian;
 class EFPoint;
 class ImmaturePoint;
 
 /** \brief Hessian component associated with one point. */
-struct PointHessian {
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+class PointHessian {
+ public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+  enum PtStatus { ACTIVE = 0, INACTIVE, OUTLIER, OOB, MARGINALIZED };
+
+  PointHessian(const ImmaturePoint* const rawPoint, CalibHessian* Hcalib);
+
+  ~PointHessian() {
+    CHECK(efPoint == nullptr);
+    release();
+    --instanceCounter;
+  }
+
+  void release() {
+    for (size_t i = 0; i < residuals.size(); ++i) {
+      delete residuals[i];
+    }
+    residuals.clear();
+  }
+
+  void setPointStatus(PtStatus s) { status = s; }
+
+  void setIdepth(float idepth) {
+    this->idepth = idepth;
+    this->idepth_scaled = SCALE_IDEPTH * idepth;
+  }
+
+  void setIdepthScaled(float idepth_scaled) {
+    this->idepth = SCALE_IDEPTH_INVERSE * idepth_scaled;
+    this->idepth_scaled = idepth_scaled;
+  }
+
+  void setIdepthZero(float idepth) {
+    idepth_zero = idepth;
+    idepth_zero_scaled = SCALE_IDEPTH * idepth;
+    nullspaces_scale = -(idepth * 1.001 - idepth / 1.001) * 500;
+  }
+
+  bool isInlierNew() {
+    return static_cast<int>(residuals.size()) >=
+               setting_minGoodActiveResForMarg &&
+           numGoodResiduals >= setting_minGoodResForMarg;
+  }
+
+  bool isOOB(const std::vector<FrameHessian*>& toKeep,
+             const std::vector<FrameHessian*>& toMarg) const;
+
+ public:
   static int instanceCounter;
   EFPoint* efPoint;
 
@@ -49,7 +95,6 @@ struct PointHessian {
   float maxRelBaseline;
   int numGoodResiduals;
 
-  enum PtStatus { ACTIVE = 0, INACTIVE, OUTLIER, OOB, MARGINALIZED };
   PtStatus status;
 
   /** \brief Container of good residuals (NO OOB and NO OUTLIER) */
@@ -59,48 +104,8 @@ struct PointHessian {
    *
    *  0: latest.
    *  1: the one before
-  */
+   */
   std::pair<PointFrameResidual*, ResState> lastResiduals[2];
-
-  PointHessian(const ImmaturePoint* const rawPoint, CalibHessian* Hcalib);
-
-  ~PointHessian() {
-    CHECK(efPoint == nullptr);
-    release();
-    --instanceCounter;
-  }
-
-  void release() {
-    for (size_t i = 0; i < residuals.size(); ++i) {
-      delete residuals[i];
-    }
-    residuals.clear();
-  }
-
-  inline void setPointStatus(PtStatus s) { status = s; }
-
-  inline void setIdepth(float idepth) {
-    this->idepth = idepth;
-    this->idepth_scaled = SCALE_IDEPTH * idepth;
-  }
-  inline void setIdepthScaled(float idepth_scaled) {
-    this->idepth = SCALE_IDEPTH_INVERSE * idepth_scaled;
-    this->idepth_scaled = idepth_scaled;
-  }
-  inline void setIdepthZero(float idepth) {
-    idepth_zero = idepth;
-    idepth_zero_scaled = SCALE_IDEPTH * idepth;
-    nullspaces_scale = -(idepth * 1.001 - idepth / 1.001) * 500;
-  }
-
-  inline bool isInlierNew() {
-    return static_cast<int>(residuals.size()) >=
-               setting_minGoodActiveResForMarg &&
-           numGoodResiduals >= setting_minGoodResForMarg;
-  }
-
-  bool isOOB(const std::vector<FrameHessian*>& toKeep,
-             const std::vector<FrameHessian*>& toMarg) const;
 };
 
-}  // dso
+}  // namespace dso

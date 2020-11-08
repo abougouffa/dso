@@ -11,7 +11,7 @@ namespace dso {
 
 class PhotometricUndistorter {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   PhotometricUndistorter(const std::string& file_photometric_calibration,
                          const std::string& image_noise,
                          const std::string& image_vignette, const int w,

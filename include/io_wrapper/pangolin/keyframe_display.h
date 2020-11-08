@@ -36,7 +36,7 @@ struct MyVertex {
 // stores a pointcloud associated to a Keyframe.
 class KeyFrameDisplay {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   KeyFrameDisplay();
   ~KeyFrameDisplay();
 
@@ -70,7 +70,7 @@ class KeyFrameDisplay {
   float fxi, fyi, cxi, cyi;
   int width, height;
 
-  float my_scaledTH, my_absTH, my_scale;
+  float my_scaledTH, my_absTH;
   int my_sparsifyFactor;
   int my_displayMode;
   float my_minRelBS;
@@ -86,5 +86,5 @@ class KeyFrameDisplay {
   pangolin::GlBuffer vertexBuffer;
   pangolin::GlBuffer colorBuffer;
 };
-}
-}
+}  // namespace IOWrap
+}  // namespace dso

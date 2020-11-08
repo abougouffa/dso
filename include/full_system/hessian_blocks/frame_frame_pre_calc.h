@@ -4,11 +4,19 @@
 
 namespace dso {
 
-struct FrameHessian;
-struct CalibHessian;
+class FrameHessian;
+class CalibHessian;
 
-struct FrameFramePrecalc {
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+class FrameFramePrecalc {
+ public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+  FrameFramePrecalc() { host = target = nullptr; }
+  ~FrameFramePrecalc() {}
+
+  void set(FrameHessian* host, FrameHessian* target, CalibHessian* HCalib);
+
+ public:
   // static values
   static int instanceCounter;
   FrameHessian* host;    // defines row
@@ -31,10 +39,6 @@ struct FrameFramePrecalc {
   Vec3f PRE_tTll_0;  // tth_0
 
   float distanceLL;
-
-  inline ~FrameFramePrecalc() {}
-  inline FrameFramePrecalc() { host = target = nullptr; }
-  void set(FrameHessian* host, FrameHessian* target, CalibHessian* HCalib);
 };
 
-}  // dso
+}  // namespace dso

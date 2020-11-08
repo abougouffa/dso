@@ -16,7 +16,7 @@ namespace dso {
  */
 class AccumulatorApprox {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   inline void initialize() {
     memset(Data, 0, sizeof(float) * 60);

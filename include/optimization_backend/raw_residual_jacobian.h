@@ -4,7 +4,7 @@
 
 namespace dso {
 struct RawResidualJacobian {
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   //! [8 x 1] Individual residual of every point in a pattern
   VecNRf resF;

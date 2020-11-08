@@ -11,7 +11,7 @@ namespace dso {
 template <int i, int j>
 class AccumulatorXX {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   inline void initialize() {
     A.setZero();
