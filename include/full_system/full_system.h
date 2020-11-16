@@ -130,8 +130,6 @@ class FullSystem {
   void printFrameLifetimes();
 
   void setGammaFunction(float* const BInv);
-  void setOriginalCalib(const VecXf& originalCalib, const int originalW,
-                        const int originalH);
 
  private:
   /** \brief Prerocess a new coming frame */
@@ -146,12 +144,14 @@ class FullSystem {
 
   double linAllPointSinle(PointHessian* point, float outlierTHSlack, bool plot);
 
-  // main pipeline functions
   Vec4 trackNewCoarse(FrameHessian* fh);
+
+  /**
+   * @brief Update points' inverse depths in host frame using frame fh
+   */
   void traceNewCoarse(FrameHessian* fh);
   void activatePoints();
   void activatePointsMT();
-  void activatePointsOldFirst();
 
   /** \brief Flag points to drop or marginalize. */
   void flagPointsForRemoval();

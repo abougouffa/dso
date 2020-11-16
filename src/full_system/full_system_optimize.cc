@@ -520,11 +520,11 @@ void FullSystem::removeOutliers() {
   for (FrameHessian* fh : frameHessians) {
     for (unsigned int i = 0; i < fh->pointHessians.size(); ++i) {
       PointHessian* ph = fh->pointHessians[i];
-      if (ph == 0) {
+      if (ph == nullptr) {
         continue;
       }
 
-      if (ph->residuals.size() == 0) {
+      if (ph->residuals.empty()) {
         fh->pointHessiansOut.emplace_back(ph);
         ph->efPoint->stateFlag = EFPointStatus::PS_DROP;
         fh->pointHessians[i] = fh->pointHessians.back();

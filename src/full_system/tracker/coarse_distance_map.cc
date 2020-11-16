@@ -68,9 +68,6 @@ void CoarseDistanceMap::makeDistanceMap(
   growDistBFS(numItems);
 }
 
-void CoarseDistanceMap::makeInlierVotes(
-    std::vector<FrameHessian*> frameHessians) {}
-
 void CoarseDistanceMap::growDistBFS(int bfsNum) {
   CHECK_NE(w[0], 0);
   int w1 = w[1], h1 = h[1];

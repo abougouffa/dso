@@ -1,5 +1,21 @@
 {
     "files.associations": {
-        "core": "cpp"
+        "core": "cpp",
+        "algorithm": "cpp",
+        "*.tcc": "cpp",
+        "*.ipp": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp",
+        "deque": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "vector": "cpp",
+        "any": "cpp",
+        "system_error": "cpp",
+        "sstream": "cpp",
+        "optional": "cpp"
     }
 }

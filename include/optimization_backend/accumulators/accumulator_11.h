@@ -54,8 +54,8 @@ class Accumulator11 {
   }
 
  public:
-  float A;     // 总能量
-  size_t num;  //点的总数量
+  float A;     // Total energe
+  size_t num;  // Total number of points
 
  private:
   void shiftUp(bool force) {

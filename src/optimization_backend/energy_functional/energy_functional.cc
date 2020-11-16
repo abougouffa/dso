@@ -882,7 +882,7 @@ void EnergyFunctional::solveSystemF(const int iteration, double lambda,
 }
 
 void EnergyFunctional::makeIDX() {
-  for (unsigned int idx = 0; idx < frames.size(); ++idx) {
+  for (size_t idx = 0; idx < frames.size(); ++idx) {
     frames[idx]->idx = idx;
   }
 

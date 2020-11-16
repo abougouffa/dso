@@ -71,7 +71,7 @@ class PointHessian {
   /** \brief Colors in host frame */
   float color[MAX_RES_PER_POINT];
 
-  /** \brief  Host-weights for respective residuals. */
+  /** \brief Host-weights for respective residuals. */
   float weights[MAX_RES_PER_POINT];
 
   float u, v;

@@ -75,7 +75,8 @@ class CoarseInitializer {
   // returns OLD NERGY, NEW ENERGY, NUM TERMS.
   Vec3f calcEC(int lvl);
 
-  /** Smooth points' inverse depths
+  /**
+   * @brief Smooth points' inverse depths
    *
    * Smoothing points' inverse depths according to the median of their
    * neighbors' inverse depths
@@ -84,7 +85,8 @@ class CoarseInitializer {
   */
   void optReg(int lvl);
 
-  /** Propagate the current level to a higher level
+  /**
+   * @brief Propagate the current level to a higher level
    *
    * Use results in the current level in pyramid to udpate the inverse depths in
    * a higher level

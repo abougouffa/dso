@@ -21,7 +21,7 @@ namespace dso {
 
 void FullSystem::flagFramesForMarginalization(FrameHessian* newFH) {
   if (setting_minFrameAge > setting_maxFrames) {
-    for (int i = setting_maxFrames; i < (int)frameHessians.size(); ++i) {
+    for (size_t i = setting_maxFrames; i < frameHessians.size(); ++i) {
       FrameHessian* fh = frameHessians[i - setting_maxFrames];
       fh->flaggedForMarginalization = true;
     }
@@ -99,9 +99,9 @@ void FullSystem::marginalizeFrame(FrameHessian* frame) {
         PointFrameResidual* r = ph->residuals[i];
         if (r->target == frame) {
           if (ph->lastResiduals[0].first == r) {
-            ph->lastResiduals[0].first = 0;
+            ph->lastResiduals[0].first = nullptr;
           } else if (ph->lastResiduals[1].first == r) {
-            ph->lastResiduals[1].first = 0;
+            ph->lastResiduals[1].first = nullptr;
           }
 
           if (r->host->frameID < r->target->frameID) {

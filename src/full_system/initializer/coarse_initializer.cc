@@ -86,7 +86,7 @@ bool CoarseInitializer::trackFrame(
 
   Vec3f latestRes = Vec3f::Zero();
 
-  // coarse to fine optmization
+  // coarse to fine optimization
   for (int lvl = PYR_LEVELS_USED - 1; lvl >= 0; --lvl) {
     if (lvl < PYR_LEVELS_USED - 1) {
       propagateDown(lvl + 1);
@@ -101,7 +101,7 @@ bool CoarseInitializer::trackFrame(
                                 refToNew_aff_current, false);
     applyStep(lvl);
 
-    // 初始化优化时用到的一些值
+    // Some values for optimization
     float lambda = 0.1;
     float eps = 1e-4;
     int fails = 0;
@@ -313,7 +313,7 @@ Vec3f CoarseInitializer::calcResAndGS(int lvl, Mat88f& H_out, Vec8f& b_out,
   Vec3f t = refToNew.translation().cast<float>();
 
   // Since we uses logf() before, we need to use exp() here
-  // This ensures the coefficients are largen than 0
+  // This ensures the coefficients are larger than 0
   Eigen::Vector2f r2new_aff =
       Eigen::Vector2f(exp(refToNew_aff.a), refToNew_aff.b);
 
@@ -445,8 +445,9 @@ Vec3f CoarseInitializer::calcResAndGS(int lvl, Mat88f& H_out, Vec8f& b_out,
     }
 
     if (!isGood || energy > point->outlierTH * 20) {
-      // 如果该pixel的误差太大，不更新它的residual，继续下一个pixel
-      E.updateSingle((float)(point->energy[0]));
+      // If current pixel's error is too large, do not update its residual.
+      // Start to process next pixel
+      E.updateSingle(point->energy[0]);
       point->isGood_new = false;
       point->energy_new = point->energy;
       continue;
@@ -471,9 +472,8 @@ Vec3f CoarseInitializer::calcResAndGS(int lvl, Mat88f& H_out, Vec8f& b_out,
     // If patternNum is not multiple times of 4, then we need to add the
     // remaning points one by one
     for (int i = ((patternNum >> 2) << 2); i < patternNum; ++i) {
-      acc9.updateSingle((float)dp0[i], (float)dp1[i], (float)dp2[i],
-                        (float)dp3[i], (float)dp4[i], (float)dp5[i],
-                        (float)dp6[i], (float)dp7[i], (float)r[i]);
+      acc9.updateSingle(dp0[i], dp1[i], dp2[i], dp3[i], dp4[i], dp5[i], dp6[i],
+                        dp7[i], r[i]);
     }
   }
 
@@ -529,7 +529,7 @@ Vec3f CoarseInitializer::calcResAndGS(int lvl, Mat88f& H_out, Vec8f& b_out,
       JbBuffer_new[i][9] += alphaOpt;
     }
 
-    // TODO 光度部分进行了尺度的缩放?
+    // TODO: Scaling of photometric part?
     JbBuffer_new[i][9] = 1 / (1 + JbBuffer_new[i][9]);
     acc9SC.updateSingleWeighted(JbBuffer_new[i][0], JbBuffer_new[i][1],
                                 JbBuffer_new[i][2], JbBuffer_new[i][3],
@@ -588,14 +588,14 @@ void CoarseInitializer::optReg(int lvl) {
   int npts = numPoints[lvl];
   Pnt* ptsl = points[lvl];
   if (!snapped) {
-    // 如果优化还没有收敛
+    // If optimization has not converged yet
     for (int i = 0; i < npts; ++i) {
       ptsl[i].iR = 1;
     }
     return;
   }
 
-  // smooth各个点的逆深度
+  // Smooth all points' inverse depths
   for (int i = 0; i < npts; ++i) {
     Pnt* point = ptsl + i;
     if (!point->isGood) {

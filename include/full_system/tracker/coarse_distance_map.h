@@ -19,8 +19,6 @@ class CoarseDistanceMap {
   void makeDistanceMap(std::vector<FrameHessian*> frameHessians,
                        FrameHessian* frame);
 
-  void makeInlierVotes(std::vector<FrameHessian*> frameHessians);
-
   void makeK(CalibHessian* HCalib);
 
   void addIntoDistFinal(int u, int v);
