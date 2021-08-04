@@ -40,9 +40,17 @@ int main(int argc, char** argv) {
   // hook crtl+C.
   boost::thread exit_thread = boost::thread(ExitThread);
 
-  DatasetReader* reader = new DatasetReader(
+  DatasetReader* reader;
+  if (param.path_2_timestamps != "") {
+    reader = new DatasetReader(
       param.path_2_images, param.path_2_calibration, param.path_2_gamma,
       param.path_2_vignette, param.path_2_timestamps);
+  } else {
+  reader = new DatasetReader(
+      param.path_2_images, param.path_2_calibration, param.path_2_gamma,
+      param.path_2_vignette);
+  }
+
   reader->SetGlobalCalibration();
 
   LOG_IF(FATAL, setting_photometricCalibration > 0 &&
