@@ -13,7 +13,7 @@ class EFPoint;
 class EnergyFunctional;
 
 class AccumulatedSCHessianSSE {
- public:
+public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   inline AccumulatedSCHessianSSE() {
     for (int i = 0; i < NUM_THREADS; ++i) {
@@ -37,7 +37,7 @@ class AccumulatedSCHessianSSE {
     }
   };
 
-  inline void setZero(int n, int min = 0, int max = 1, Vec10* stats = 0,
+  inline void setZero(int n, int min = 0, int max = 1, Vec10 *stats = 0,
                       int tid = 0) {
     if (n != nframes[tid]) {
       if (accE[tid] != 0) {
@@ -66,12 +66,12 @@ class AccumulatedSCHessianSSE {
     }
     nframes[tid] = n;
   }
-  void stitchDouble(MatXX& H_sc, VecX& b_sc, const EnergyFunctional * const EF,
+  void stitchDouble(MatXX &H_sc, VecX &b_sc, const EnergyFunctional *const EF,
                     int tid = 0);
-  void addPoint(EFPoint* p, bool shiftPriorToZero, int tid = 0);
+  void addPoint(EFPoint *p, bool shiftPriorToZero, int tid = 0);
 
-  void stitchDoubleMT(IndexThreadReduce<Vec10>* red, MatXX& H, VecX& b,
-                      const EnergyFunctional * const EF, bool MT) {
+  void stitchDoubleMT(IndexThreadReduce<Vec10> *red, MatXX &H, VecX &b,
+                      const EnergyFunctional *const EF, bool MT) {
     // sum up, splitting by bock in square.
     if (MT) {
       MatXX Hs[NUM_THREADS];
@@ -83,7 +83,9 @@ class AccumulatedSCHessianSSE {
       }
 
       red->reduce(boost::bind(&AccumulatedSCHessianSSE::stitchDoubleInternal,
-                              this, Hs, bs, EF, _1, _2, _3, _4),
+                              this, Hs, bs, EF, boost::placeholders::_1,
+                              boost::placeholders::_2, boost::placeholders::_3,
+                              boost::placeholders::_4),
                   0, nframes[0] * nframes[0], 0);
 
       // sum up results
@@ -108,23 +110,23 @@ class AccumulatedSCHessianSSE {
     }
   }
 
-  AccumulatorXX<8, CPARS>* accE[NUM_THREADS];
-  AccumulatorX<8>* accEB[NUM_THREADS];
-  AccumulatorXX<8, 8>* accD[NUM_THREADS];
+  AccumulatorXX<8, CPARS> *accE[NUM_THREADS];
+  AccumulatorX<8> *accEB[NUM_THREADS];
+  AccumulatorXX<8, 8> *accD[NUM_THREADS];
   AccumulatorXX<CPARS, CPARS> accHcc[NUM_THREADS];
   AccumulatorX<CPARS> accbc[NUM_THREADS];
   int nframes[NUM_THREADS];
 
-  void addPointsInternal(std::vector<EFPoint*>* points, bool shiftPriorToZero,
-                         int min = 0, int max = 1, Vec10* stats = 0,
+  void addPointsInternal(std::vector<EFPoint *> *points, bool shiftPriorToZero,
+                         int min = 0, int max = 1, Vec10 *stats = 0,
                          int tid = 0) {
     for (int i = min; i < max; ++i) {
       addPoint((*points)[i], shiftPriorToZero, tid);
     }
   }
 
- private:
-  void stitchDoubleInternal(MatXX* H, VecX* b, const EnergyFunctional * const EF,
-                            int min, int max, Vec10* stats, int tid);
+private:
+  void stitchDoubleInternal(MatXX *H, VecX *b, const EnergyFunctional *const EF,
+                            int min, int max, Vec10 *stats, int tid);
 };
-}
+} // namespace dso

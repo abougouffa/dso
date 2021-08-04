@@ -499,7 +499,7 @@ void PangolinDSOViewer::pushDepthImage(MinimalImageB3* image) {
   }
   last_map = time_now;
 
-  memcpy(internalKFImg->data, image->data, w * h * 3);
+  memcpy((void*)internalKFImg->data, image->data, w * h * 3);
   kfImgChanged = true;
 }
 }

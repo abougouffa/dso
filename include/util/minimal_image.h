@@ -43,7 +43,7 @@ class MinimalImage {
   inline T &at(int x, int y) { return data[x + y * w]; }
   inline T &at(int i) { return data[i]; }
 
-  inline void setBlack() { memset(data, 0, sizeof(T) * w * h); }
+  inline void setBlack() { memset((void*)data, 0, sizeof(T) * w * h); }
 
   inline void setConst(T val) {
     for (int i = 0; i < w * h; ++i) data[i] = val;

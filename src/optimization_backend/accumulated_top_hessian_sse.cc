@@ -12,7 +12,7 @@
 namespace dso {
 
 void AccumulatedTopHessianSSE::setZero(const int nFrames, const int min,
-                                       const int max, Vec10* const stats,
+                                       const int max, Vec10 *const stats,
                                        const int tid) {
   if (nFrames != nframes[tid]) {
     // if the number of frames has changed, reset accumulator of Hessian to
@@ -36,8 +36,8 @@ void AccumulatedTopHessianSSE::setZero(const int nFrames, const int min,
 }
 
 template <int mode>
-void AccumulatedTopHessianSSE::addPoint(EFPoint* const p,
-                                        const EnergyFunctional* const ef,
+void AccumulatedTopHessianSSE::addPoint(EFPoint *const p,
+                                        const EnergyFunctional *const ef,
                                         const int tid) {
   // 0 = active, 1 = linearized, 2 = marginalize
   CHECK(mode == 0 || mode == 1 || mode == 2);
@@ -49,7 +49,7 @@ void AccumulatedTopHessianSSE::addPoint(EFPoint* const p,
   float Hdd_acc = 0;
   VecCf Hcd_acc = VecCf::Zero();
 
-  for (EFResidual* r : p->residualsAll) {
+  for (EFResidual *r : p->residualsAll) {
     if (mode == 0) {
       if (r->isLinearized || !r->isActive()) {
         // In mode active, we only process points which are NOT linearized
@@ -68,7 +68,7 @@ void AccumulatedTopHessianSSE::addPoint(EFPoint* const p,
       CHECK(r->isLinearized);
     }
 
-    RawResidualJacobian* rJ = r->J;
+    RawResidualJacobian *rJ = r->J;
 
     // Compute an id of a part of Hessian according to host id and target id
     const int htIDX = r->hostIDX + r->targetIDX * nframes[tid];
@@ -90,24 +90,24 @@ void AccumulatedTopHessianSSE::addPoint(EFPoint* const p,
 
       for (int i = 0; i < patternNum; i += 4) {
         // PATTERN: rtz = resF - [JI*Jp Ja]*delta.
-        __m128 rtz = _mm_load_ps(((float*)&r->res_toZeroF) + i);
-        rtz = _mm_add_ps(
-            rtz, _mm_mul_ps(_mm_load_ps(((float*)(rJ->JIdx)) + i), Jp_delta_x));
-        rtz = _mm_add_ps(
-            rtz,
-            _mm_mul_ps(_mm_load_ps(((float*)(rJ->JIdx + 1)) + i), Jp_delta_y));
-        rtz = _mm_add_ps(
-            rtz, _mm_mul_ps(_mm_load_ps(((float*)(rJ->JabF)) + i), delta_a));
+        __m128 rtz = _mm_load_ps(((float *)&r->res_toZeroF) + i);
+        rtz = _mm_add_ps(rtz, _mm_mul_ps(_mm_load_ps(((float *)(rJ->JIdx)) + i),
+                                         Jp_delta_x));
         rtz = _mm_add_ps(
             rtz,
-            _mm_mul_ps(_mm_load_ps(((float*)(rJ->JabF + 1)) + i), delta_b));
-        _mm_store_ps(((float*)&resApprox) + i, rtz);
+            _mm_mul_ps(_mm_load_ps(((float *)(rJ->JIdx + 1)) + i), Jp_delta_y));
+        rtz = _mm_add_ps(
+            rtz, _mm_mul_ps(_mm_load_ps(((float *)(rJ->JabF)) + i), delta_a));
+        rtz = _mm_add_ps(
+            rtz,
+            _mm_mul_ps(_mm_load_ps(((float *)(rJ->JabF + 1)) + i), delta_b));
+        _mm_store_ps(((float *)&resApprox) + i, rtz);
       }
     }
 
-    Vec2f JI_r(0, 0);   // [0]: r * (dr / du) ; [1]: r * (dr / dv)
-    Vec2f Jab_r(0, 0);  // [0]: r * (dr / da) ; [1]: r * (dr / db)
-    float rr = 0;       // squared residual
+    Vec2f JI_r(0, 0);  // [0]: r * (dr / du) ; [1]: r * (dr / dv)
+    Vec2f Jab_r(0, 0); // [0]: r * (dr / da) ; [1]: r * (dr / db)
+    float rr = 0;      // squared residual
     for (int i = 0; i < patternNum; ++i) {
       JI_r[0] += resApprox[i] * rJ->JIdx[0][i];
       JI_r[1] += resApprox[i] * rJ->JIdx[1][i];
@@ -128,7 +128,7 @@ void AccumulatedTopHessianSSE::addPoint(EFPoint* const p,
         rJ->Jpdxi[1].data(), rJ->JabJIdx(0, 0), rJ->JabJIdx(0, 1),
         rJ->JabJIdx(1, 0), rJ->JabJIdx(1, 1), JI_r[0], JI_r[1]);
 
-    Vec2f Ji2_Jpdd = rJ->JIdx2 * rJ->Jpdd;  // (dr / dp)^T * (dr / dd)
+    Vec2f Ji2_Jpdd = rJ->JIdx2 * rJ->Jpdd; // (dr / dp)^T * (dr / dd)
 
     // r * (dr / dd)
     bd_acc += JI_r[0] * rJ->Jpdd[0] + JI_r[1] * rJ->Jpdd[1];
@@ -160,14 +160,14 @@ void AccumulatedTopHessianSSE::addPoint(EFPoint* const p,
 }
 
 template void AccumulatedTopHessianSSE::addPoint<0>(
-    EFPoint* const p, const EnergyFunctional* const ef, int tid);
+    EFPoint *const p, const EnergyFunctional *const ef, int tid);
 template void AccumulatedTopHessianSSE::addPoint<1>(
-    EFPoint* const p, const EnergyFunctional* const ef, int tid);
+    EFPoint *const p, const EnergyFunctional *const ef, int tid);
 template void AccumulatedTopHessianSSE::addPoint<2>(
-    EFPoint* const p, const EnergyFunctional* const ef, int tid);
+    EFPoint *const p, const EnergyFunctional *const ef, int tid);
 
-void AccumulatedTopHessianSSE::stitchDouble(MatXX& H, VecX& b,
-                                            const EnergyFunctional* const EF,
+void AccumulatedTopHessianSSE::stitchDouble(MatXX &H, VecX &b,
+                                            const EnergyFunctional *const EF,
                                             bool usePrior, bool useDelta,
                                             int tid) {
   H = MatXX::Zero(nframes[tid] * 8 + CPARS, nframes[tid] * 8 + CPARS);
@@ -244,13 +244,13 @@ void AccumulatedTopHessianSSE::stitchDouble(MatXX& H, VecX& b,
 }
 
 void AccumulatedTopHessianSSE::stitchDoubleInternal(
-    MatXX* H, VecX* b, const EnergyFunctional* const EF, bool usePrior, int min,
-    int max, Vec10* stats, int tid) {
+    MatXX *H, VecX *b, const EnergyFunctional *const EF, bool usePrior, int min,
+    int max, Vec10 *stats, int tid) {
   int toAggregate = NUM_THREADS;
   if (tid == -1) {
     toAggregate = 1;
     tid = 0;
-  }  // special case: if we dont do multithreading, dont aggregate.
+  } // special case: if we dont do multithreading, dont aggregate.
 
   if (min == max) {
     return;
@@ -318,9 +318,9 @@ void AccumulatedTopHessianSSE::stitchDoubleInternal(
   }
 }
 
-void AccumulatedTopHessianSSE::stitchDoubleMT(IndexThreadReduce<Vec10>* red,
-                                              MatXX& H, VecX& b,
-                                              const EnergyFunctional* const EF,
+void AccumulatedTopHessianSSE::stitchDoubleMT(IndexThreadReduce<Vec10> *red,
+                                              MatXX &H, VecX &b,
+                                              const EnergyFunctional *const EF,
                                               const bool usePrior,
                                               const bool MT) {
   // sum up, splitting by bock in square.
@@ -334,7 +334,9 @@ void AccumulatedTopHessianSSE::stitchDoubleMT(IndexThreadReduce<Vec10>* red,
     }
 
     red->reduce(boost::bind(&AccumulatedTopHessianSSE::stitchDoubleInternal,
-                            this, Hs, bs, EF, usePrior, _1, _2, _3, _4),
+                            this, Hs, bs, EF, usePrior, boost::placeholders::_1,
+                            boost::placeholders::_2, boost::placeholders::_3,
+                            boost::placeholders::_4),
                 0, nframes[0] * nframes[0], 0);
 
     // sum up results
@@ -369,4 +371,4 @@ void AccumulatedTopHessianSSE::stitchDoubleMT(IndexThreadReduce<Vec10>* red,
   }
 }
 
-}  // dso
+} // namespace dso

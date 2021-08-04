@@ -7,7 +7,7 @@ namespace dso {
 
 namespace IOWrap {
 MinimalImageB* readImageBW_8U(std::string filename) {
-  cv::Mat m = cv::imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
+  cv::Mat m = cv::imread(filename,  cv::IMREAD_GRAYSCALE);
   if (m.rows * m.cols == 0) {
     LOG(ERROR) << "cv::imread could not read image " << filename
                << "! This may segmentation fault.";
@@ -19,12 +19,12 @@ MinimalImageB* readImageBW_8U(std::string filename) {
     return 0;
   }
   MinimalImageB* img = new MinimalImageB(m.cols, m.rows);
-  memcpy(img->data, m.data, m.rows * m.cols);
+  memcpy((void*)img->data, m.data, m.rows * m.cols);
   return img;
 }
 
 MinimalImageB3* readImageRGB_8U(std::string filename) {
-  cv::Mat m = cv::imread(filename, CV_LOAD_IMAGE_COLOR);
+  cv::Mat m = cv::imread(filename,  cv::IMREAD_COLOR);
   if (m.rows * m.cols == 0) {
     LOG(ERROR) << "cv::imread could not read image " << filename
                << "! This may segmentation fault.";
@@ -36,12 +36,12 @@ MinimalImageB3* readImageRGB_8U(std::string filename) {
     return 0;
   }
   MinimalImageB3* img = new MinimalImageB3(m.cols, m.rows);
-  memcpy(img->data, m.data, 3 * m.rows * m.cols);
+  memcpy((void*)img->data, m.data, 3 * m.rows * m.cols);
   return img;
 }
 
 MinimalImage<unsigned short>* readImageBW_16U(std::string filename) {
-  cv::Mat m = cv::imread(filename, CV_LOAD_IMAGE_UNCHANGED);
+  cv::Mat m = cv::imread(filename,  cv::IMREAD_UNCHANGED);
   if (m.rows * m.cols == 0) {
     LOG(ERROR) << "cv::imread could not read image " << filename
                << "! This may segmentation fault.";
@@ -54,13 +54,13 @@ MinimalImage<unsigned short>* readImageBW_16U(std::string filename) {
   }
   MinimalImage<unsigned short>* img =
       new MinimalImage<unsigned short>(m.cols, m.rows);
-  memcpy(img->data, m.data, 2 * m.rows * m.cols);
+  memcpy((void*)img->data, m.data, 2 * m.rows * m.cols);
   return img;
 }
 
 MinimalImageB* readStreamBW_8U(char* data, int numBytes) {
   cv::Mat m =
-      cv::imdecode(cv::Mat(numBytes, 1, CV_8U, data), CV_LOAD_IMAGE_GRAYSCALE);
+      cv::imdecode(cv::Mat(numBytes, 1, CV_8U, data),  cv::IMREAD_GRAYSCALE);
   if (m.rows * m.cols == 0) {
     if (m.rows * m.cols == 0) {
       LOG(ERROR) << "cv::imdecode could not read stream (" << numBytes
@@ -74,7 +74,7 @@ MinimalImageB* readStreamBW_8U(char* data, int numBytes) {
     return 0;
   }
   MinimalImageB* img = new MinimalImageB(m.cols, m.rows);
-  memcpy(img->data, m.data, m.rows * m.cols);
+  memcpy((void*)img->data, m.data, m.rows * m.cols);
   return img;
 }
 

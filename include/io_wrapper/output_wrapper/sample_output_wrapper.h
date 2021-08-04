@@ -35,7 +35,7 @@ class SampleOutputWrapper : public Output3DWrapper {
 
     int maxWrite = 5;
 
-    for (const std::pair<uint64_t, Eigen::Vector2i>& p : connectivity) {
+    for (const std::pair<uint64_t, Eigen::Vector2i> p : connectivity) {
       int idHost = p.first >> 32;
       int idTarget = p.first & ((uint64_t)0xFFFFFFFF);
       LOG(INFO) << "OUT: Example Edge " << idHost << " -> " << idTarget

@@ -123,7 +123,7 @@ Vec3 FullSystem::linearizeAll(const bool fixLinearization) {
 
   if (multiThreading) {
     treadReduce.reduce(boost::bind(&FullSystem::linearizeAll_Reductor, this,
-                                   fixLinearization, toRemove, _1, _2, _3, _4),
+                                   fixLinearization, toRemove, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3, boost::placeholders::_4),
                        0, activeResiduals.size(), 0);
     lastEnergyP = treadReduce.stats[0];
   } else {
@@ -366,7 +366,7 @@ float FullSystem::optimize(int mnumOptIts) {
 
   if (multiThreading) {
     treadReduce.reduce(
-        boost::bind(&FullSystem::applyRes_Reductor, this, true, _1, _2, _3, _4),
+        boost::bind(&FullSystem::applyRes_Reductor, this, true, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3, boost::placeholders::_4),
         0, activeResiduals.size(), 50);
   } else {
     applyRes_Reductor(true, 0, activeResiduals.size(), 0, 0);
@@ -440,7 +440,7 @@ float FullSystem::optimize(int mnumOptIts) {
          lastEnergy[0] + lastEnergy[1] + lastEnergyL + lastEnergyM)) {
       if (multiThreading) {
         treadReduce.reduce(boost::bind(&FullSystem::applyRes_Reductor, this,
-                                       true, _1, _2, _3, _4),
+                                       true, boost::placeholders::_1, boost::placeholders::_2, boost::placeholders::_3, boost::placeholders::_4),
                            0, activeResiduals.size(), 50);
       } else {
         applyRes_Reductor(true, 0, activeResiduals.size(), 0, 0);
