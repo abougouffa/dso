@@ -22,11 +22,11 @@
  */
 
 #pragma once
-#include "IOWrapper/Output3DWrapper.h"
-#include "util/MinimalImage.h"
+#include "io_wrapper/output_3d_wrapper.h"
+#include "util/minimal_image.h"
 
-#include "FullSystem/HessianBlocks.h"
-#include "util/FrameShell.h"
+#include "full_system/hessian_blocks/hessian_blocks.h"
+#include "util/frame_shell.h"
 
 namespace dso {
 
