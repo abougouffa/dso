@@ -28,6 +28,7 @@ struct InputParam {
   std::string path_2_log = "";
 
   bool use_sample_output = false;
+  bool use_pcl_output = false;
   bool quiet = false;
   bool no_log = false;
   bool reverse = false;

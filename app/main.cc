@@ -4,6 +4,7 @@
 #include <glog/logging.h>
 
 #include "full_system/full_system.h"
+#include "io_wrapper/output_wrapper/pointcloud_output_wrapper.h"
 #include "io_wrapper/output_wrapper/sample_output_wrapper.h"
 #include "io_wrapper/pangolin/pangolin_dso_viewer.h"
 #include "util/dataset_reader.h"
@@ -31,7 +32,7 @@ void ExitThread() {
   }
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   LOG_IF(FATAL, argc < 2) << "Usage: ./dso path_to_configuration";
 
   InputParam param = InputParser::Read(argv[1]);
@@ -84,6 +85,11 @@ int main(int argc, char** argv) {
 
   if (param.use_sample_output) {
     full_system->outputWrapper.emplace_back(new IOWrap::SampleOutputWrapper());
+  }
+
+  if (param.use_pcl_output) {
+    full_system->outputWrapper.emplace_back(
+        new IOWrap::PointCloudOutputWrapper());
   }
 
   // to make MacOS happy: run this in dedicated thread -- and use this one to

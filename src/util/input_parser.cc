@@ -63,6 +63,9 @@ InputParam InputParser::Read(const std::string& config) {
   if (!settings["Bool.UseSampleOutput"].empty()) {
     settings["Bool.UseSampleOutput"] >> param.use_sample_output;
   }
+  if (!settings["Bool.UsePCLOutput"].empty()) {
+    settings["Bool.UsePCLOutput"] >> param.use_pcl_output;
+  }
   if (!settings["Bool.Quiet"].empty()) {
     settings["Bool.Quiet"] >> param.quiet;
   }
