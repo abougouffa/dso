@@ -1,0 +1,4 @@
+Pinhole fx fy cx cy 0
+640 480
+crop
+640 480

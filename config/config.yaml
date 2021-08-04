@@ -1,0 +1,78 @@
+%YAML:1.0
+
+#--------------------------------------------------------------------------------------------
+# Requried
+#--------------------------------------------------------------------------------------------
+
+# 0: default settings (2k pts etc.), not enforcing real-time execution
+# 1: default settings (2k pts etc.), enforcing 1x real-time execution
+# 2: fast settings (800 pts etc.), not enforcing real-time execution. WARNING: overwrites image resolution with 424 x 320.
+# 3: fast settings (800 pts etc.), enforcing 5x real-time execution. WARNING: overwrites image resolution with 424 x 320.
+Int.Preset: 0
+
+# 0: use if a photometric calibration exists (e.g. TUM monoVO dataset).
+# 1: use if NO photometric calibration exists (e.g. ETH EuRoC MAV dataset).
+# 2: use if images are not photometrically distorted (e.g. synthetic datasets).
+Int.Mode: 1
+
+# Absolute path to timestamp file
+String.Timestamps: "/absolute/path/2/timestamps"
+
+# either a folder or .zip archive containing images. They are sorted alphabetically. for .zip to work, need to comiple with ziplib support.
+String.Images: "/absolute/path/2/images"
+
+### Absolute path to calibration file (See README)
+String.Calib: "/absolute/path/2/calibration/file"
+
+# a monochrome 16bit or 8bit image containing the vignette as pixelwise attenuation factors. See TUM monoVO dataset for an example.
+String.Vignette: ""
+
+# a gamma calibration file, containing a single row with 256 values, mapping [0..255] to the respective irradiance value, i.e. containing the discretized inverse response function. See TUM monoVO dataset for an example.
+String.Gamma: ""
+
+# Absolute path for GLOG files
+String.LogPath: "/absolute/path/2/log"
+
+#--------------------------------------------------------------------------------------------
+# Optional
+#--------------------------------------------------------------------------------------------
+
+# register a "SampleOutputWrapper", printing some sample output data to the commandline. meant as example.
+Bool.UseSampleOutput: 0
+
+# disable most console output (good for performance)
+Bool.Quiet: 0
+
+# disable logging of eigenvalues etc. (good for performance)
+Bool.NoLog: 0
+
+# play sequence in reverse
+Bool.Reverse: 0
+
+# load into memory & rectify all images before running DSO
+Bool.Prefetch: 0
+
+# disable gui (good for performance)
+Bool.NoGui: 0
+
+# Multi threading
+Bool.MultiThreading: 0
+
+# save lots of images for video creation
+Bool.Save: 0
+
+Bool.Preload: 1
+Bool.DisableRos: 0
+Bool.DisableReconfigure: false
+
+# Start image id (default: 0)
+Int.StartId: 700
+
+# End image id
+Int.EndId: 100000
+
+# force execution at X times real-time speed (0 = not enforcing real-time)
+# 0 for linearize (play as fast as possible, while sequentializing tracking & mapping). otherwise, factor on timestamps.
+Float.PlaySpeed: 0
+
+Double.Rescale: 1
