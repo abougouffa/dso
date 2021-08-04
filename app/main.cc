@@ -41,15 +41,14 @@ int main(int argc, char **argv) {
   // hook crtl+C.
   boost::thread exit_thread = boost::thread(ExitThread);
 
-  DatasetReader* reader;
+  DatasetReader *reader;
   if (param.path_2_timestamps != "") {
-    reader = new DatasetReader(
-      param.path_2_images, param.path_2_calibration, param.path_2_gamma,
-      param.path_2_vignette, param.path_2_timestamps);
+    reader = new DatasetReader(param.path_2_images, param.path_2_calibration,
+                               param.path_2_gamma, param.path_2_vignette,
+                               param.path_2_timestamps);
   } else {
-  reader = new DatasetReader(
-      param.path_2_images, param.path_2_calibration, param.path_2_gamma,
-      param.path_2_vignette);
+    reader = new DatasetReader(param.path_2_images, param.path_2_calibration,
+                               param.path_2_gamma, param.path_2_vignette);
   }
 
   reader->SetGlobalCalibration();
@@ -73,11 +72,11 @@ int main(int argc, char **argv) {
     linc = -1;
   }
 
-  FullSystem* full_system = new FullSystem();
+  FullSystem *full_system = new FullSystem();
   full_system->setGammaFunction(reader->GetPhotometricGamma());
   full_system->linearizeOperation = (param.play_speed == 0.f);
 
-  IOWrap::PangolinDSOViewer* viewer = 0;
+  IOWrap::PangolinDSOViewer *viewer = 0;
   if (!disableAllDisplay) {
     viewer = new IOWrap::PangolinDSOViewer(wG[0], hG[0], false);
     full_system->outputWrapper.emplace_back(viewer);
@@ -104,7 +103,7 @@ int main(int argc, char **argv) {
       times_to_play_at.emplace_back(ts);
     }
 
-    std::vector<ImageAndExposure*> preloaded_images;
+    std::vector<ImageAndExposure *> preloaded_images;
     if (param.preload) {
       LOG(WARNING) << "LOADING ALL IMAGES!";
       for (size_t ii = 0; ii < ids_to_play.size(); ++ii) {
@@ -128,7 +127,7 @@ int main(int argc, char **argv) {
 
       int i = ids_to_play[ii];
 
-      ImageAndExposure* img;
+      ImageAndExposure *img;
       if (param.preload) {
         img = preloaded_images[ii];
       } else {
@@ -143,11 +142,11 @@ int main(int argc, char **argv) {
         if (ii < 250 || setting_fullResetRequested) {
           LOG(WARNING) << "RESETTING!";
 
-          std::vector<IOWrap::Output3DWrapper*> wraps =
+          std::vector<IOWrap::Output3DWrapper *> wraps =
               full_system->outputWrapper;
           delete full_system;
 
-          for (IOWrap::Output3DWrapper* ow : wraps) {
+          for (IOWrap::Output3DWrapper *ow : wraps) {
             ow->reset();
           }
 
@@ -165,6 +164,7 @@ int main(int argc, char **argv) {
         break;
       }
     }
+
     full_system->blockUntilMappingIsFinished();
     clock_t ended = clock();
     struct timeval tv_end;
@@ -192,6 +192,7 @@ int main(int argc, char **argv) {
               << "x (single core); \n"
               << 1000 / (milliseconds_taken_mt / seconds_processed)
               << "x (multi core);\n======================\n\n";
+
     // full_system->printFrameLifetimes();
     if (setting_logStuff) {
       std::ofstream tmp_log;
@@ -206,7 +207,6 @@ int main(int argc, char **argv) {
       tmp_log.flush();
       tmp_log.close();
     }
-
   });
 
   if (viewer != nullptr) {
@@ -215,7 +215,7 @@ int main(int argc, char **argv) {
 
   runthread.join();
 
-  for (IOWrap::Output3DWrapper* ow : full_system->outputWrapper) {
+  for (IOWrap::Output3DWrapper *ow : full_system->outputWrapper) {
     ow->join();
     delete ow;
   }
