@@ -196,6 +196,9 @@ ImageAndExposure* DatasetReader::GetImageInternal(const int id,
   ImageAndExposure* ret2 = undistorter_->Undistort<unsigned char>(
       minimg, (exposures_.size() == 0 ? 1.0f : exposures_[id]),
       (timestamps_.size() == 0 ? 0.0 : timestamps_[id]));
+  
+  ret2->init_scale = (scales_.size() == 0) ? 1. : scales_[id];
+
   delete minimg;
   return ret2;
 }
@@ -291,4 +294,34 @@ void DatasetReader::LoadTimestamps(const std::string& file_timestamps) {
             << " timestamps!";
 }
 
-}  // dso
+  void DatasetReader::LoadScales(const std::string &file_scales) {
+    LOG(INFO) << "Reading scales from file " << file_scales;
+    std::ifstream in;
+    in.open(file_scales.c_str());
+    if (in.is_open()) {
+      while (!in.eof()) {
+        std::string s1, s2;
+        getline(in, s1, ',');
+        getline(in, s2);
+
+        if (!s1.empty() && !s2.empty()) {
+          std::stringstream ss1, ss2;
+
+          ss1 << s1;
+          ss2 << s2;
+          if (ss1.good() && ss2.good()) {
+            double timestamp, scale;
+            ss1 >> timestamp;
+            ss2 >> scale;
+            kf_times_.emplace_back(timestamp);
+            scales_.emplace_back(scale);
+          }
+        }
+      }
+      in.close();
+    } else {
+      LOG(WARNING) << "Unable to open scales file";
+    }
+  }
+
+  } // dso

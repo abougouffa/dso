@@ -60,6 +60,18 @@ class DatasetReader {
     return timestamps_[id];
   }
 
+  double GetScale(const int id) const {
+    if (scales_.size() == 0) {
+      return 0.;
+    }
+    if (id < 0) {
+      return 0.;
+    } else if (static_cast<size_t>(id) >= scales_.size()) {
+      return 0.;
+    }
+    return scales_[id];
+  }
+
   MinimalImageB* GetImageRaw(const int id) {
     return GetImageRawInternal(id, 0);
   }
@@ -80,7 +92,7 @@ class DatasetReader {
  public:
   // Undistorter. [0] always exists, [1-2] only when MT is enabled.
   Undistorter* undistorter_;
-
+  void LoadScales(const std::string &file_scales);
  private:
   void SetFiles(std::string dir);
 
@@ -94,6 +106,7 @@ class DatasetReader {
   std::vector<std::string> files_;
   std::vector<double> timestamps_;
   std::vector<float> exposures_;
+  std::vector<double> scales_;
 
   int width_, height_;
   int width_org_, height_org_;

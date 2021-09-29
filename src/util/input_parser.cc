@@ -59,7 +59,13 @@ InputParam InputParser::Read(const std::string& config) {
   if (!settings["String.LogPath"].empty()) {
     settings["String.LogPath"] >> param.path_2_log;
   }
+  if (!settings["String.Scales"].empty()) {
+    settings["String.Scales"] >> param.path_2_scales;
+  }
 
+  if (!settings["Bool.UseScales"].empty()) {
+    settings["Bool.UseScales"] >> param.use_scales;
+  }
   if (!settings["Bool.UseSampleOutput"].empty()) {
     settings["Bool.UseSampleOutput"] >> param.use_sample_output;
   }
