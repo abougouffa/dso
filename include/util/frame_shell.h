@@ -12,6 +12,7 @@ class FrameShell {
   int id;            // INTERNAL ID, starting at zero.
   int incoming_id;   // ID passed into DSO
   double timestamp;  // timestamp passed into DSO.
+  double init_scale;  // Inital scale from file.
 
   // set once after tracking
   SE3 camToTrackingRef;     // Tref_cur
@@ -34,9 +35,10 @@ class FrameShell {
     id = 0;
     poseValid = true;
     camToWorld = SE3();
-    timestamp = 0;
+    timestamp = 0.;
+    init_scale = 0.;
     marginalizedAt = -1;
-    movedByOpt = 0;
+    movedByOpt = 0.;
     statistics_outlierResOnThis = statistics_goodResOnThis = 0;
     trackingRef = 0;
     camToTrackingRef = SE3();

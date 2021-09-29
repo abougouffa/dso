@@ -26,7 +26,9 @@ struct InputParam {
   std::string path_2_vignette = "";
   std::string path_2_gamma = "";
   std::string path_2_log = "";
+  std::string path_2_scales = "";
 
+  bool use_scales = false;
   bool use_sample_output = false;
   bool use_pcl_output = false;
   bool quiet = false;
