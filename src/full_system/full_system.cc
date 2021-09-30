@@ -1390,6 +1390,7 @@ FrameHessian *FullSystem::PreprocessNewFrame(ImageAndExposure *const image,
   shell->marginalizedAt = shell->id = allFrameHistory.size();
   shell->timestamp = image->timestamp;
   shell->incoming_id = id;
+  shell->init_scale = image->init_scale;
   fh->shell = shell;
   allFrameHistory.emplace_back(shell);
 

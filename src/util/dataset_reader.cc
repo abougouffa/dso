@@ -300,20 +300,14 @@ void DatasetReader::LoadTimestamps(const std::string& file_timestamps) {
     in.open(file_scales.c_str());
     if (in.is_open()) {
       while (!in.eof()) {
-        std::string s1, s2;
-        getline(in, s1, ',');
-        getline(in, s2);
-
-        if (!s1.empty() && !s2.empty()) {
-          std::stringstream ss1, ss2;
-
-          ss1 << s1;
-          ss2 << s2;
-          if (ss1.good() && ss2.good()) {
-            double timestamp, scale;
-            ss1 >> timestamp;
-            ss2 >> scale;
-            kf_times_.emplace_back(timestamp);
+        std::string s;
+        getline(in, s);
+        if (!s.empty()) {
+          std::stringstream ss;
+          ss << s;
+          if (ss.good()) {
+            double scale;
+            ss >> scale;
             scales_.emplace_back(scale);
           }
         }
