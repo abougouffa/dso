@@ -91,6 +91,12 @@ int main(int argc, char **argv) {
         new IOWrap::PointCloudOutputWrapper());
   }
 
+  if (param.use_scales) {
+    if (param.path_2_scales != "")
+      reader->LoadScales(param.path_2_scales);
+  }
+  
+
   // to make MacOS happy: run this in dedicated thread -- and use this one to
   // run the GUI.
   std::thread runthread([&]() {
