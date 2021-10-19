@@ -53,7 +53,6 @@ double PointFrameResidual::linearize(CalibHessian* const HCalib) {
 
   FrameFramePrecalc* precalc = &(host->targetPrecalc[target->idx]);
   const Eigen::Vector3f* dIl = target->dI;  // [intensity gx gy]
-
   // K * R * K^{-1}: from host to target
   const Mat33f& PRE_KRKiTll = precalc->PRE_KRKiTll;
   const Vec3f& PRE_KtTll = precalc->PRE_KtTll;

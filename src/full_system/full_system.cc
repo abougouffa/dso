@@ -1106,14 +1106,15 @@ void FullSystem::initializeFromInitializer(FrameHessian *newFrame) {
   firstFrame->pointHessiansOut.reserve(wG[0] * hG[0] * 0.2f);
 
   // sum of inverse depths, number of inverse depths
-  float sumID = 1e-5, numID = 1e-5;
-  for (int i = 0; i < coarseInitializer->numPoints[0]; ++i) {
-    sumID += coarseInitializer->points[0][i].iR;
-    ++numID;
-  }
-  // inverse of mean inverse depth
-  float rescaleFactor = 1 / (sumID / numID);
+  // float sumID = 1e-5, numID = 1e-5;
+  // for (int i = 0; i < coarseInitializer->numPoints[0]; ++i) {
+  //   sumID += coarseInitializer->points[0][i].iR;
+  //   ++numID;
+  // }
 
+  // inverse of mean inverse depth
+  // float rescaleFactor = 1 / (sumID / numID);
+  double scale = newFrame->shell->init_scale / coarseInitializer->thisToNext.translation().norm();
   // randomly sub-select the points I need.
   float keepPercentage =
       setting_desiredPointDensity / coarseInitializer->numPoints[0];
@@ -1146,7 +1147,7 @@ void FullSystem::initializeFromInitializer(FrameHessian *newFrame) {
       continue;
     }
 
-    ph->setIdepthScaled(point->iR * rescaleFactor);
+    ph->setIdepthScaled(point->iR / scale);
     ph->setIdepthZero(ph->idepth);
     ph->hasDepthPrior = true;
     ph->setPointStatus(PointHessian::ACTIVE);
@@ -1156,7 +1157,7 @@ void FullSystem::initializeFromInitializer(FrameHessian *newFrame) {
   }
 
   SE3 firstToNew = coarseInitializer->thisToNext;
-  firstToNew.translation() /= rescaleFactor;
+  firstToNew.translation() *= scale;
   LOG(INFO) << "DSO computed t: " << firstToNew.translation().transpose();
 
   // really no lock required, as we are initializing.

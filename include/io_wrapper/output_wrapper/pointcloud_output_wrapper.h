@@ -58,9 +58,14 @@ public:
 
   virtual void publishKeyframes(std::vector<FrameHessian *> &frames,
                                 bool is_final, CalibHessian *HCalib) override {
-    float fxl = HCalib->fxl(), fyl = HCalib->fyl(), cxl = HCalib->cxl(),
+    float fxl = HCalib->fxl(), 
+          fyl = HCalib->fyl(), 
+          cxl = HCalib->cxl(),
           cyl = HCalib->cyl();
-    float fxi = 1. / fxl, fyi = 1. / fyl, cxi = -cxl / fxl, cyi = -cyl / fyl;
+    float fxi = 1. / fxl, 
+          fyi = 1. / fyl, 
+          cxi = -cxl / fxl, 
+          cyi = -cyl / fyl;
 
     if (is_final) {
       for (FrameHessian *frame : frames) {
@@ -72,7 +77,7 @@ public:
             float depth = 1. / point->idepth;
             auto const x = (point->u * fxi + cxi) * depth;
             auto const y = (point->v * fyi + cyi) * depth;
-            auto const z = (1. + 2. * fxi) * depth;
+            auto const z = /*(1. + 2. * fxi) * */ depth; 
 
             Eigen::Vector4d pt_cam(x, y, z, 1.);
             Eigen::Vector3d pt_world = c2w_mat * pt_cam;

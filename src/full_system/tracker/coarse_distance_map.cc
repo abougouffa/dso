@@ -1,7 +1,7 @@
 #include "full_system/tracker/coarse_distance_map.h"
 
 #include <glog/logging.h>
-
+#include "util/frame_shell.h"
 #include "full_system/hessian_blocks/hessian_blocks.h"
 #include "full_system/residuals.h"
 
@@ -41,18 +41,21 @@ void CoarseDistanceMap::makeDistanceMap(
 
   // make coarse tracking templates for latstRef.
   int numItems = 0;
-
+  double scale = frame->shell->init_scale / frame->PRE_camToWorld.translation().norm();
   for (FrameHessian* fh : frameHessians) {
     if (frame == fh) {
       continue;
     }
 
     SE3 fhToNew = frame->PRE_worldToCam * fh->PRE_camToWorld;
+    fhToNew.translation() *= scale;
     Mat33f KRKi = (K[1] * fhToNew.rotationMatrix().cast<float>() * Ki[0]);
     Vec3f Kt = (K[1] * fhToNew.translation().cast<float>());
 
     for (PointHessian* ph : fh->pointHessians) {
       CHECK_EQ(ph->status, PointHessian::ACTIVE);
+      ph->setIdepthScaled(ph->idepth_scaled / scale);
+      ph->setIdepthZero(ph->idepth_zero / scale);
       Vec3f ptp = KRKi * Vec3f(ph->u, ph->v, 1) + Kt * ph->idepth_scaled;
       int u = ptp[0] / ptp[2] + 0.5f;
       int v = ptp[1] / ptp[2] + 0.5f;
