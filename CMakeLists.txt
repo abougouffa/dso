@@ -1,7 +1,7 @@
 SET(PROJECT_NAME DSO)
 
 PROJECT(${PROJECT_NAME})
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
 
@@ -18,7 +18,7 @@ find_package(Eigen3 REQUIRED)
 find_package(Boost COMPONENTS system thread) 
 
 # optional libraries
-find_package(LibZip QUIET)
+find_package(LIBZIP QUIET)
 find_package(Pangolin 0.2 QUIET)
 find_package(OpenCV QUIET)
 
