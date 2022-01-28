@@ -22,6 +22,7 @@
  */
 
 #pragma once
+
 #include "util/MinimalImage.h"
 #include "util/NumType.h"
 

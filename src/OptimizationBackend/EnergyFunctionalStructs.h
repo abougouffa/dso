@@ -25,8 +25,8 @@
 
 #include "OptimizationBackend/RawResidualJacobian.h"
 #include "util/NumType.h"
-#include "vector"
-#include <math.h>
+#include <cmath>
+#include <vector>
 
 namespace dso {
 

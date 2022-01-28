@@ -22,6 +22,7 @@
  */
 
 #pragma once
+
 #include "util/NumType.h"
 #include "util/settings.h"
 

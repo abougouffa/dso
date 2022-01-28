@@ -35,7 +35,7 @@
 #include "util/Undistort.h"
 
 #if HAS_ZIPLIB
-#include "zip.h"
+#include <zip.h>
 #endif
 
 #include <boost/thread.hpp>

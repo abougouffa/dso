@@ -22,12 +22,11 @@
  */
 
 #pragma once
-#include <string>
-#include <vector>
-
-#include "map"
 #include "util/MinimalImage.h"
 #include "util/NumType.h"
+#include <map>
+#include <string>
+#include <vector>
 
 namespace cv {
 class Mat;

@@ -27,8 +27,8 @@
 #include "OptimizationBackend/MatrixAccumulators.h"
 #include "util/NumType.h"
 #include "util/settings.h"
-#include "vector"
-#include <math.h>
+#include <cmath>
+#include <vector>
 
 namespace dso {
 struct CalibHessian;

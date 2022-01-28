@@ -24,14 +24,13 @@
 #pragma once
 #define MAX_ACTIVE_FRAMES 100
 
-#include "util/globalCalib.h"
-#include "vector"
-
 #include "FullSystem/Residuals.h"
 #include "util/ImageAndExposure.h"
 #include "util/NumType.h"
+#include "util/globalCalib.h"
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 namespace dso {
 

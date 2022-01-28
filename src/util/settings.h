@@ -24,7 +24,7 @@
 #pragma once
 
 #include <cmath>
-#include <string.h>
+#include <cstring>
 #include <string>
 
 namespace dso {

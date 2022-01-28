@@ -24,11 +24,6 @@
 #pragma once
 #define MAX_ACTIVE_FRAMES 100
 
-#include "util/NumType.h"
-#include "util/globalCalib.h"
-#include "vector"
-#include <deque>
-
 #include "FullSystem/HessianBlocks.h"
 #include "FullSystem/PixelSelector2.h"
 #include "FullSystem/Residuals.h"
@@ -36,10 +31,12 @@
 #include "util/FrameShell.h"
 #include "util/IndexThreadReduce.h"
 #include "util/NumType.h"
+#include "util/globalCalib.h"
+#include <cmath>
+#include <deque>
 #include <fstream>
 #include <iostream>
-
-#include <math.h>
+#include <vector>
 
 namespace dso {
 namespace IOWrap {
@@ -64,6 +61,7 @@ inline void deleteOut(std::vector<T*>& v, const int i) {
   v[i] = v.back();
   v.pop_back();
 }
+
 template <typename T>
 inline void deleteOutPt(std::vector<T*>& v, const T* i) {
   delete i;
@@ -74,6 +72,7 @@ inline void deleteOutPt(std::vector<T*>& v, const T* i) {
       v.pop_back();
     }
 }
+
 template <typename T>
 inline void deleteOutOrder(std::vector<T*>& v, const int i) {
   delete v[i];
@@ -81,6 +80,7 @@ inline void deleteOutOrder(std::vector<T*>& v, const int i) {
     v[k - 1] = v[k];
   v.pop_back();
 }
+
 template <typename T>
 inline void deleteOutOrder(std::vector<T*>& v, const T* element) {
   int i = -1;

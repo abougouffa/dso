@@ -22,10 +22,12 @@
  */
 
 #pragma once
-#include "boost/thread.hpp"
+
+#include "util/NumType.h"
 #include "util/settings.h"
+#include <boost/thread.hpp>
+#include <cstdio>
 #include <iostream>
-#include <stdio.h>
 
 namespace dso {
 

@@ -23,11 +23,11 @@
 
 #pragma once
 
-#include <map>
-#include "util/NumType.h"
 #include "util/IndexThreadReduce.h"
+#include "util/NumType.h"
+#include <cmath>
+#include <map>
 #include <vector>
-#include <math.h>
 
 namespace dso {
 
