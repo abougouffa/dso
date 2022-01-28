@@ -290,7 +290,7 @@ void KeyFrameDisplay::drawCam(float lineWidth, float* color, float sizeFactor) {
 
   glPushMatrix();
 
-  Sophus::Matrix4f m = camToWorld.matrix().cast<float>();
+  Eigen::Matrix4f m = camToWorld.matrix().cast<float>();
   glMultMatrixf((GLfloat*)m.data());
 
   if (color == 0) {
@@ -334,7 +334,7 @@ void KeyFrameDisplay::drawPC(float pointSize) {
 
   glPushMatrix();
 
-  Sophus::Matrix4f m = camToWorld.matrix().cast<float>();
+  Eigen::Matrix4f m = camToWorld.matrix().cast<float>();
   glMultMatrixf((GLfloat*)m.data());
 
   glPointSize(pointSize);

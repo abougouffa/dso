@@ -35,6 +35,7 @@
 #include "FullSystem/PixelSelector2.h"
 #include "FullSystem/Residuals.h"
 #include "util/nanoflann.h"
+#include <Eigen/Dense>
 
 #if !defined(__SSE3__) && !defined(__SSE2__) && !defined(__SSE1__)
 #include "SSE2NEON.h"

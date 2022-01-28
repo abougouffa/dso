@@ -28,6 +28,7 @@
 #include "OptimizationBackend/AccumulatedSCHessian.h"
 #include "OptimizationBackend/AccumulatedTopHessian.h"
 #include "OptimizationBackend/EnergyFunctionalStructs.h"
+#include <Eigen/Dense>
 
 #if !defined(__SSE3__) && !defined(__SSE2__) && !defined(__SSE1__)
 #include "SSE2NEON.h"

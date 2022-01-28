@@ -308,7 +308,7 @@ void PangolinDSOViewer::drawConstraints() {
       int nAct = connections[i].bwdAct + connections[i].fwdAct;
       int nMarg = connections[i].bwdMarg + connections[i].fwdMarg;
       if (nAct == 0 && nMarg > 0) {
-        Sophus::Vector3f t = connections[i].from->camToWorld.translation().cast<float>();
+        Eigen::Vector3f t = connections[i].from->camToWorld.translation().cast<float>();
         glVertex3f((GLfloat)t[0], (GLfloat)t[1], (GLfloat)t[2]);
         t = connections[i].to->camToWorld.translation().cast<float>();
         glVertex3f((GLfloat)t[0], (GLfloat)t[1], (GLfloat)t[2]);
@@ -327,7 +327,7 @@ void PangolinDSOViewer::drawConstraints() {
       int nAct = connections[i].bwdAct + connections[i].fwdAct;
 
       if (nAct > 0) {
-        Sophus::Vector3f t = connections[i].from->camToWorld.translation().cast<float>();
+        Eigen::Vector3f t = connections[i].from->camToWorld.translation().cast<float>();
         glVertex3f((GLfloat)t[0], (GLfloat)t[1], (GLfloat)t[2]);
         t = connections[i].to->camToWorld.translation().cast<float>();
         glVertex3f((GLfloat)t[0], (GLfloat)t[1], (GLfloat)t[2]);
