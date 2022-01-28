@@ -136,7 +136,7 @@ void settingsDefault(int preset) {
   printf("==============================================\n");
 }
 
-void parseArgument(char *arg) {
+void parseArgument(char* arg) {
   int option;
   float foption;
   char buf[1000];
@@ -316,7 +316,7 @@ void parseArgument(char *arg) {
   printf("could not parse argument \"%s\"!!!!\n", arg);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   // setlocale(LC_ALL, "");
   for (int i = 1; i < argc; i++)
     parseArgument(argv[i]);
@@ -324,7 +324,7 @@ int main(int argc, char **argv) {
   // hook crtl+C.
   boost::thread exThread = boost::thread(exitThread);
 
-  ImageFolderReader *reader =
+  ImageFolderReader* reader =
       new ImageFolderReader(source, calib, gammaCalib, vignette);
   reader->setGlobalCalibration();
 
@@ -347,11 +347,11 @@ int main(int argc, char **argv) {
     linc = -1;
   }
 
-  FullSystem *fullSystem = new FullSystem();
+  FullSystem* fullSystem = new FullSystem();
   fullSystem->setGammaFunction(reader->getPhotometricGamma());
   fullSystem->linearizeOperation = (playbackSpeed == 0);
 
-  IOWrap::PangolinDSOViewer *viewer = 0;
+  IOWrap::PangolinDSOViewer* viewer = 0;
   if (!disableAllDisplay) {
     viewer = new IOWrap::PangolinDSOViewer(wG[0], hG[0], false);
     fullSystem->outputWrapper.push_back(viewer);
@@ -382,7 +382,7 @@ int main(int argc, char **argv) {
       }
     }
 
-    std::vector<ImageAndExposure *> preloadedImages;
+    std::vector<ImageAndExposure*> preloadedImages;
     if (preload) {
       printf("LOADING ALL IMAGES!\n");
       for (int ii = 0; ii < (int)idsToPlay.size(); ii++) {
@@ -406,7 +406,7 @@ int main(int argc, char **argv) {
 
       int i = idsToPlay[ii];
 
-      ImageAndExposure *img;
+      ImageAndExposure* img;
       if (preload)
         img = preloadedImages[ii];
       else
@@ -439,11 +439,11 @@ int main(int argc, char **argv) {
         if (ii < 250 || setting_fullResetRequested) {
           printf("RESETTING!\n");
 
-          std::vector<IOWrap::Output3DWrapper *> wraps =
+          std::vector<IOWrap::Output3DWrapper*> wraps =
               fullSystem->outputWrapper;
           delete fullSystem;
 
-          for (IOWrap::Output3DWrapper *ow : wraps)
+          for (IOWrap::Output3DWrapper* ow : wraps)
             ow->reset();
 
           fullSystem = new FullSystem();
@@ -509,7 +509,7 @@ int main(int argc, char **argv) {
 
   runthread.join();
 
-  for (IOWrap::Output3DWrapper *ow : fullSystem->outputWrapper) {
+  for (IOWrap::Output3DWrapper* ow : fullSystem->outputWrapper) {
     ow->join();
     delete ow;
   }

@@ -56,19 +56,19 @@ public:
     std::cout << "OUT: Destroyed PointCloudOutputWrapper" << std::endl;
   }
 
-  virtual void publishKeyframes(std::vector<FrameHessian *> &frames,
-                                bool is_final, CalibHessian *HCalib) override {
+  virtual void publishKeyframes(std::vector<FrameHessian*>& frames,
+                                bool is_final, CalibHessian* HCalib) override {
     float fxl = HCalib->fxl(), fyl = HCalib->fyl(), cxl = HCalib->cxl(),
           cyl = HCalib->cyl();
     float fxi = 1. / fxl, fyi = 1. / fyl, cxi = -cxl / fxl, cyi = -cyl / fyl;
 
     if (is_final) {
-      for (FrameHessian *frame : frames) {
+      for (FrameHessian* frame : frames) {
         if (frame->shell->poseValid) {
-          auto const &c2w_mat = frame->shell->camToWorld.matrix3x4();
+          auto const& c2w_mat = frame->shell->camToWorld.matrix3x4();
 
           // Use only marginalized points.
-          for (auto const *point : frame->pointHessiansMarginalized) {
+          for (auto const* point : frame->pointHessiansMarginalized) {
             float depth = 1. / point->idepth;
             auto const x = (point->u * fxi + cxi) * depth;
             auto const y = (point->v * fyi + cyi) * depth;
